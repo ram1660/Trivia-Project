@@ -1,3 +1,4 @@
+#include <iostream>
 struct LoginResponse
 {
 	unsigned int status;
@@ -6,4 +7,8 @@ struct LoginResponse
 struct SignupResponse
 {
 	unsigned int status;
+};
+struct ErrorResponse
+{
+	std::string message;
 };
