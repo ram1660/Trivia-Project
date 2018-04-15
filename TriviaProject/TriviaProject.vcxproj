@@ -115,11 +115,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="JsonRequestPacketDeserializer.cpp" />
     <ClCompile Include="JsonResponsePacketSerializer.cpp" />
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsoneResponsePacketSerializer.h" />
+    <ClInclude Include="JsonRequestPacketDeserializer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

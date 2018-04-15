@@ -21,9 +21,15 @@
     <ClCompile Include="JsonResponsePacketSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JsonRequestPacketDeserializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsoneResponsePacketSerializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonRequestPacketDeserializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
