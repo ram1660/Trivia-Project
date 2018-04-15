@@ -122,6 +122,7 @@
   <ItemGroup>
     <ClInclude Include="JsoneResponsePacketSerializer.h" />
     <ClInclude Include="JsonRequestPacketDeserializer.h" />
+    <ClInclude Include="response.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
