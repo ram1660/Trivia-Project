@@ -120,6 +120,7 @@
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IRequestHandler.h" />
     <ClInclude Include="JsoneResponsePacketSerializer.h" />
     <ClInclude Include="JsonRequestPacketDeserializer.h" />
     <ClInclude Include="sqlite_modern_cpp.h" />
