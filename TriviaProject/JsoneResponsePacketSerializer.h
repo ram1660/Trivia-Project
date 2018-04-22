@@ -1,5 +1,5 @@
 #pragma once
-#include "response.h"
+#include <iostream>
 class JsonResponsePacketSerializer
 {
 public:
@@ -8,5 +8,20 @@ public:
 	static Buffer serializeResponse(SignupResponse s);
 	
 
+};
+
+struct LoginResponse
+{
+	unsigned int status;
+};
+
+struct SignupResponse
+{
+	unsigned int status;
+};
+
+struct ErrorResponse
+{
+	std::string message;
 };
 

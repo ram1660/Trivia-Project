@@ -32,9 +32,6 @@
     <ClInclude Include="JsonRequestPacketDeserializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="response.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sqlite_modern_cpp.h">
       <Filter>Header Files</Filter>
     </ClInclude>

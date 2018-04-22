@@ -122,7 +122,6 @@
   <ItemGroup>
     <ClInclude Include="JsoneResponsePacketSerializer.h" />
     <ClInclude Include="JsonRequestPacketDeserializer.h" />
-    <ClInclude Include="response.h" />
     <ClInclude Include="sqlite_modern_cpp.h" />
     <ClInclude Include="sqlite_modern_cpp\errors.h" />
     <ClInclude Include="sqlite_modern_cpp\lists\error_codes.h" />
