@@ -115,14 +115,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Communicator.cpp" />
+    <ClCompile Include="IDatabase.cpp" />
     <ClCompile Include="JsonRequestPacketDeserializer.cpp" />
     <ClCompile Include="JsonResponsePacketSerializer.cpp" />
+    <ClCompile Include="LoggedUser.cpp" />
+    <ClCompile Include="LoginManager.cpp" />
+    <ClCompile Include="LoginRequestHandler.cpp" />
+    <ClCompile Include="RequestHnadlerFactory.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="sqlite3.c" />
+    <ClCompile Include="SqliteDatabase.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Communicator.h" />
+    <ClInclude Include="IDatabase.h" />
     <ClInclude Include="IRequestHandler.h" />
     <ClInclude Include="JsoneResponsePacketSerializer.h" />
     <ClInclude Include="JsonRequestPacketDeserializer.h" />
+    <ClInclude Include="LoggedUser.h" />
+    <ClInclude Include="LoginManager.h" />
+    <ClInclude Include="LoginRequestHandler.h" />
+    <ClInclude Include="RequestHnadlerFactory.h" />
+    <ClInclude Include="sqlite3.h" />
+    <ClInclude Include="SqliteDatabase.h" />
     <ClInclude Include="sqlite_modern_cpp.h" />
     <ClInclude Include="sqlite_modern_cpp\errors.h" />
     <ClInclude Include="sqlite_modern_cpp\lists\error_codes.h" />
