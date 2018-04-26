@@ -1,6 +1,8 @@
 #pragma once
 #include "LoginRequestHandler.h"
-class RequestHnadlerFactory
+#include "Structs.h"
+#include "LoginManager.h"
+class RequestHandlerFactory
 {
 public:
 	LoginRequestHandler createLoginRequestHandler();

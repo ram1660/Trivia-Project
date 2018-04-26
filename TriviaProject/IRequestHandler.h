@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-
+#include "Structs.h"
 class IRequestHandler
 {
 public:
@@ -8,14 +8,3 @@ public:
 	virtual RequestResult handleRequest(Request r) = 0;
 };
 
-struct RequestResult
-{
-	Buffer response;
-	IRequestHandler newHandler;
-};
-struct Request
-{
-	RequestId id;
-	receivalTime ctime;
-	std::vector<unsigned char> buffer;
-};

@@ -6,13 +6,18 @@
 #include <map>
 #include <thread>
 #include "IDatabase.h"
+#include "i"
 class Communicator
 {
 public:
 	void bindAndListen();
-	void handeRequests();
+	void handleRequests();
+	Communicator();
+	~Communicator();
+
 private:
 	void startThreadForNewClient();
 	std::map<SOCKET, IRequestHandlerFactory> m_clients;
+	SOCKET _serverSocket;
 };
 
