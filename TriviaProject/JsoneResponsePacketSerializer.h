@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "structures.h"+
 class JsonResponsePacketSerializer
 {
 public:
@@ -10,18 +11,4 @@ public:
 
 };
 
-struct LoginResponse
-{
-	unsigned int status;
-};
-
-struct SignupResponse
-{
-	unsigned int status;
-};
-
-struct ErrorResponse
-{
-	std::string message;
-};
 

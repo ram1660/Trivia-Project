@@ -59,5 +59,8 @@
     <ClInclude Include="sqlite_modern_cpp\utility\variant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
