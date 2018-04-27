@@ -2,15 +2,24 @@
 
 Buffer JsonResponsePacketSerializer::serializeResponse(ErrorResponse s)
 {
-	return Buffer();
+	Buffer buffer;
+	json j = s.message;
+	buffer.buffer = json::to_msgpack(s);
+	return buffer;
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(LoginResponse s)
 {
-	return Buffer();
+	Buffer buffer;
+	json j = s.status;
+	buffer.buffer = json::to_msgpack(s);
+	return buffer;
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(SignupResponse s)
 {
-	return Buffer();
+	Buffer buffer;
+	json j = s.status;
+	buffer.buffer = json::to_msgpack(s);
+	return buffer;
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "sqlite3.h"
+#include "sqlite_modern_cpp\sqlite3.h"
 #include "sqlite_modern_cpp.h"
 #include "LoggedUser.h"
 #include <map>

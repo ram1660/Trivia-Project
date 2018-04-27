@@ -3,14 +3,13 @@
 LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(Buffer b)
 {
 	LoginRequest request;
-	switch ()
-	{
-	default:
-		break;
-	}
+	request.username = b.buffer[2];
+	return request;
 }
 
 SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(Buffer b)
 {
-	return SignupRequest();
+	SignupRequest request;
+
+	request.username = 
 }
