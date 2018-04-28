@@ -1,5 +1,7 @@
 #include "Communicator.h"
 #define PORT 5023
+mutex m;
+condition_variable c;
 Communicator::Communicator()
 {
 	_serverSocket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -41,9 +43,12 @@ void Communicator::bindAndListen()
 
 void Communicator::handleRequests()
 {
+	std::map<SOCKET, IRequestHandler*>::iterator it = m_clients.begin();
+	SOCKET user_socket = it->first;
+	vector<unsigned char> buffer;
 	while (true)
 	{
-
+		int res = recv(user_socket, buffer, bytesNum, flags);
 	}
 }
 
@@ -52,7 +57,7 @@ void Communicator::startThreadForNewClient()
 	SOCKET client_socket = ::accept(_serverSocket, NULL, NULL);
 	if (client_socket == INVALID_SOCKET)
 		throw std::exception(__FUNCTION__);
-	m_clients.insert(pair<SOCKET, IRequestHandler>(client_socket, m_handlerFactory.createLoginRequestHandler()));
+	m_clients.insert(pair<SOCKET, IRequestHandler*>(client_socket, m_handlerFactory.createLoginRequestHandler()));
 
 	thread t(&Communicator::handleRequests, this, client_socket);
 	t.detach();
