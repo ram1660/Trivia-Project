@@ -1,12 +1,16 @@
 #pragma once
 #include "LoginRequestHandler.h"
-#include "Structs.h"
+#include "structures.h"
 #include "LoginManager.h"
 class RequestHandlerFactory
 {
 public:
-	LoginRequestHandler createLoginRequestHandler();
+	LoginRequestHandler* createLoginRequestHandler();
+	~RequestHandlerFactory();
+	RequestHandlerFactory();
+	RequestHandlerFactory(LoginManager* manager);
+
 private:
-	LoginManager m_loginManager;
+	LoginManager* m_loginManager;
 };
 

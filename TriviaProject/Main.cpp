@@ -7,8 +7,8 @@ int main()
 		Server server;
 		server.run();
 	}
-	catch (const std::exception&)
+	catch (const std::exception& e)
 	{
-
+		std::cout << e.what() << std::endl;
 	}
 }

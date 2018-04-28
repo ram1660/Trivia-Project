@@ -10,6 +10,9 @@ Communicator::Communicator()
 
 Communicator::~Communicator()
 {
+	for (int i = 0; i < m_clients.size(); i++)
+		delete m_clients[i];
+
 	try
 	{
 		::closesocket(_serverSocket);
@@ -27,21 +30,31 @@ void Communicator::bindAndListen()
 		throw std::exception(__FUNCTION__ " - bind");
 	if (::listen(_serverSocket, SOMAXCONN) == SOCKET_ERROR)
 		throw std::exception(__FUNCTION__ " - listen");
-	std::thread mthread(&server::messageQ, this);
-	mthread.detach();
 	std::cout << "Listening on port " << PORT << std::endl;
 
 	while (true)
 	{
 		std::cout << "Waiting for client connection request" << std::endl;
-		accept();
+		startThreadForNewClient();
 	}
 }
 
 void Communicator::handleRequests()
 {
+	while (true)
+	{
+
+	}
 }
 
 void Communicator::startThreadForNewClient()
 {
+	SOCKET client_socket = ::accept(_serverSocket, NULL, NULL);
+	if (client_socket == INVALID_SOCKET)
+		throw std::exception(__FUNCTION__);
+	m_clients.insert(pair<SOCKET, IRequestHandler>(client_socket, m_handlerFactory.createLoginRequestHandler()));
+
+	thread t(&Communicator::handleRequests, this, client_socket);
+	t.detach();
+
 }

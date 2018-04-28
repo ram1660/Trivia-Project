@@ -1,7 +1,8 @@
 #include "LoginRequestHandler.h"
-
+#include "structures.h"
 bool LoginRequestHandler::isRequestRelevan(Request r)
 {
+	
 	return false;
 }
 
@@ -18,6 +19,10 @@ RequestResult LoginRequestHandler::login(Request r)
 RequestResult LoginRequestHandler::signup(Request r)
 {
 	return RequestResult();
+}
+
+LoginRequestHandler::~LoginRequestHandler()
+{
 }
 
 bool LoginRequestHandler::isRequestRelavent(Request r)

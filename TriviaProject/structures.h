@@ -1,10 +1,23 @@
+#pragma once
 #include <iostream>
 #include <map>
 #include <vector>
+#include <bitset>
+#include <cstddef>
 using namespace std;
 
+struct RequestResult
+{
+	Buffer response;
+	IRequestHandler& newHandler;
+};
 
-
+struct Request
+{
+	RequestId id;
+	time_t receivalTime;
+	vector<unsigned char> buffer;
+};
 
 		/*RESPONSE*/
 struct LoginResponse
@@ -107,3 +120,14 @@ struct PlayerResults
 };
 
 		/*REQUEST*/
+struct LoginRequest
+{
+	string username;
+	string password;
+};
+struct SignupRequest
+{
+	string username;
+	string password;
+	string email;
+};
