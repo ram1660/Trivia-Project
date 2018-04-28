@@ -155,7 +155,6 @@
     <ClInclude Include="sqlite_modern_cpp\utility\uncaught_exceptions.h" />
     <ClInclude Include="sqlite_modern_cpp\utility\utf16_utf8.h" />
     <ClInclude Include="sqlite_modern_cpp\utility\variant.h" />
-    <ClInclude Include="Structs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

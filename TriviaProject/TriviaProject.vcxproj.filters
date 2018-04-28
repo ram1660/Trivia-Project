@@ -119,9 +119,6 @@
     <ClInclude Include="Server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Structs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RequestHandlerFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
