@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
-#include "structures.h"+
+#include "structures.h"
+#include "Buffer.h"
+#include "json.hpp"
+using json = nlohmann::json;
 class JsonResponsePacketSerializer
 {
 public:
@@ -8,7 +11,5 @@ public:
 	static Buffer serializeResponse(LoginResponse s);
 	static Buffer serializeResponse(SignupResponse s);
 	
-
 };
-
 
