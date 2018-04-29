@@ -6,10 +6,11 @@ class Server
 public:
 	Server();
 	~Server();
+	Server(IDatabase& db, Communicator communicator, RequestHandlerFactory factory);
 	void run();
 private:
-	IDatabase m_database;
+	IDatabase* m_database;
 	Communicator m_communicator;
-	RequestHandlerFactory m_handlerFactory
+	RequestHandlerFactory m_handlerFactory;
 };
 
