@@ -6,6 +6,7 @@
 #include <cstddef>
 using namespace std;
 
+		/*HANDLERS*/
 struct RequestResult
 {
 	Buffer response;
@@ -14,7 +15,7 @@ struct RequestResult
 
 struct Request
 {
-	RequestId id;
+	unsigned int id;
 	time_t receivalTime;
 	vector<unsigned char> buffer;
 };
@@ -130,4 +131,24 @@ struct SignupRequest
 	string username;
 	string password;
 	string email;
+};
+
+		
+	
+		/*MANAGERS*/
+struct GameData
+{
+	Question currentQuestion;
+	unsigned int correctAnswerCount;
+	unsigned int wrongAnswerCount;
+	unsigned int averageAnswerTime;
+};
+
+struct roomData
+{
+	unsigned int id;
+	string name;
+	string maxPlayers;
+	unsigned int timePerQuestion;
+	unsigned int isActive;
 };
