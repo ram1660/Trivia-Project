@@ -13,12 +13,14 @@ class Communicator
 {
 public:
 	void bindAndListen();
-	void handleRequests();
+	void handleRequests(SOCKET& client);
 	Communicator();
 	~Communicator();
 
 private:
 	void startThreadForNewClient();
+	int getCode(SOCKET sc);
+
 	std::map<SOCKET, IRequestHandler*> m_clients;
 	RequestHandlerFactory m_handlerFactory;
 	SOCKET _serverSocket;

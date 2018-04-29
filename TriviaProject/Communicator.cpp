@@ -41,14 +41,29 @@ void Communicator::bindAndListen()
 	}
 }
 
-void Communicator::handleRequests()
+void Communicator::handleRequests(SOCKET& client)
 {
-	std::map<SOCKET, IRequestHandler*>::iterator it = m_clients.begin();
-	SOCKET user_socket = it->first;
-	vector<unsigned char> buffer;
+	Request currentReq;
+	char *buffer = new char[5];
 	while (true)
 	{
-		int res = recv(user_socket, buffer, bytesNum, flags);
+		int res = recv(client, buffer, 5, 0);
+		for (int i = 0; i < 5; i++)
+		{
+			currentReq.buffer.push_back(buffer[i]);
+		}
+		IRequestHandler* rq = m_clients.at(client);
+		if (rq->isRequestRelavent(currentReq))
+		{
+			rq->handleRequest(currentReq);
+		}
+		else
+		{
+			ErrorResponse response;
+			// Inform a new protocol.
+			//response.message
+			JsonResponsePacketSerializer::serializeResponse(response);
+		}
 	}
 }
 
@@ -59,7 +74,12 @@ void Communicator::startThreadForNewClient()
 		throw std::exception(__FUNCTION__);
 	m_clients.insert(pair<SOCKET, IRequestHandler*>(client_socket, m_handlerFactory.createLoginRequestHandler()));
 
-	thread t(&Communicator::handleRequests, this, client_socket);
+	thread t(&Communicator::handleRequests, ref(client_socket), client_socket);
 	t.detach();
 
+}
+
+int Communicator::getCode(SOCKET sc)
+{
+	return 0;
 }

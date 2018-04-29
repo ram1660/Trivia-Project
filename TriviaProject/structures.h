@@ -4,11 +4,13 @@
 #include <vector>
 #include <bitset>
 #include <cstddef>
+
 using namespace std;
 
 		/*HANDLERS*/
 struct RequestResult
 {
+	
 	Buffer response;
 	IRequestHandler& newHandler;
 };
@@ -17,7 +19,7 @@ struct Request
 {
 	unsigned int id;
 	time_t receivalTime;
-	vector<unsigned char> buffer;
+	vector<byte> buffer;
 };
 
 		/*RESPONSE*/
