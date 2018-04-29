@@ -1,0 +1,13 @@
+#pragma once
+#include <WinSock2.h>
+enum Protocol : byte
+{
+	REQUEST_SIGNIN = 201,
+	RESPONSE_SIGNIN = 101,
+	REQUEST_SIGNOUT = 203,
+	RESPONSE_SIGNOUT = 103,
+	REQUEST_SIGNUP = 204,
+	RESPONSE_SIGNUP = 104,
+	RESPONSE_ERROR = 105,
+
+};
