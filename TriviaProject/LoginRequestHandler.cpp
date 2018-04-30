@@ -8,7 +8,7 @@ bool LoginRequestHandler::isRequestRelevan(Request r)
 
 RequestResult LoginRequestHandler::handleRequest(Request r)
 {
-	return RequestResult();
+	JsonRequestPacketDeserializer::deserializeLoginRequest(r.buffer);
 }
 
 RequestResult LoginRequestHandler::login(Request r)

@@ -1,5 +1,6 @@
 #pragma once
+#include <Windows.h>
 struct Buffer
 {
-	byte* buffer;
+	vector<byte> buffer;
 };
