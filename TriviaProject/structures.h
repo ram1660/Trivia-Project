@@ -10,9 +10,8 @@ using namespace std;
 		/*HANDLERS*/
 struct RequestResult
 {
-	
 	Buffer response;
-	IRequestHandler& newHandler;
+	IRequestHandler* newHandler;
 };
 
 struct Request

@@ -5,11 +5,15 @@
 class LoginManager
 {
 public:
-	void signup(std::string name, std::string something, std::string anothersomething);
-	void login(std::string name, std::string anothername);
+	LoginManager();
+	LoginManager(IDatabase& db);
+	void signup(std::string username, std::string password, std::string email);
+	void login(std::string username, std::string password);
 	void logout();
+	std::vector<LoggedUser> getLoggedUsers() const;
+	IDatabase& getDatabase() const;
 private:
-	IDatabase& m_database;
+	IDatabase* m_database;
 	std::vector<LoggedUser> m_loggedUsers;
 };
 
