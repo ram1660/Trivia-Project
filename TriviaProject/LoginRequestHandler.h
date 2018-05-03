@@ -3,12 +3,14 @@
 #include "structures.h"
 #include "RequestHandlerFactory.h"
 #include "JsonRequestPacketDeserializer.h"
+#include "JsoneResponsePacketSerializer.h"
 #include "Protocol.h"
 #include "structures.h"
+#include <algorithm>
 class LoginRequestHandler : public IRequestHandler
 {
 public:
-	LoginRequestHandler(LoginManager& manager, RequestHandlerFactory factory);
+	LoginRequestHandler(LoginManager* manager, RequestHandlerFactory* factory);
 	~LoginRequestHandler();
 	bool isRequestRelavent(Request r) override;
 	RequestResult handleRequest(Request r) override;

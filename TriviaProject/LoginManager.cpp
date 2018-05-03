@@ -19,6 +19,7 @@ void LoginManager::signup(std::string username, std::string password, std::strin
 	// Some SQL queries.
 	// Checking if the user exists.
 	// If he doesn't exists then entering the info the database but not into LoggedUsers vector.
+	// IF he exists don't do nothing.
 }
 
 void LoginManager::login(std::string username, std::string password)
@@ -26,6 +27,7 @@ void LoginManager::login(std::string username, std::string password)
 	// Some SQL queries.
 	// Checking if the user exists.
 	// If he is inserting him to LoggedUsers vector.
+	// Else don't insert
 }
 
 void LoginManager::logout()

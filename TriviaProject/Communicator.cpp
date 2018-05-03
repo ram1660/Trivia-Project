@@ -45,9 +45,7 @@ void Communicator::handleRequests(SOCKET& client)
 {
 	Request currentReq;
 	while (true)
-	{
-		
-		
+	{	
 		int idRequest = getCode(client);
 		int bufferLen = atoi(getPartFromSocket(client, 2));
 		char *bufferData = getPartFromSocket(client, bufferLen);
@@ -58,8 +56,10 @@ void Communicator::handleRequests(SOCKET& client)
 		IRequestHandler* rq = m_clients.at(client);
 		if (rq->isRequestRelavent(currentReq))
 		{
-			rq = new LoginRequestHandler();
-			rq->handleRequest(currentReq);
+			RequestResult result = rq->handleRequest(currentReq);
+			if (result.newHandler != nullptr)
+				rq = result.newHandler;
+			sendData(client, result.response);
 		}
 		else
 		{
@@ -67,7 +67,7 @@ void Communicator::handleRequests(SOCKET& client)
 			// Inform a new protocol.
 			response.message = RESPONSE_ERROR;
 			Buffer b = JsonResponsePacketSerializer::serializeResponse(response);
-
+			sendData(client, b);
 		}
 	}
 }
@@ -107,9 +107,7 @@ char * Communicator::getPartFromSocket(SOCKET sc, int bytesNumber)
 char * Communicator::getPartFromSocket(SOCKET sc, int bytesNum, int flags)
 {
 	if (bytesNum == 0)
-	{
 		return 0;
-	}
 
 	char* data = new char[bytesNum + 1];
 	int res = recv(sc, data, bytesNum, flags);
@@ -142,10 +140,9 @@ string Communicator::getPaddedNumber(int num, int digits)
 
 void Communicator::sendData(SOCKET sc, Buffer message)
 {
+	//string test = message.buffer[10] + message.buffer[1];
 	const char* data = message.buffer; // Ask how the sending works.
 
-	if (send(sc, data, message.size(), 0) == INVALID_SOCKET)
-	{
+	if (send(sc, data, message.buffer.size(), 0) == INVALID_SOCKET)
 		throw std::exception("Error while sending message to client");
-	}
 }

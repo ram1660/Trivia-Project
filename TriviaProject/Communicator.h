@@ -1,15 +1,18 @@
 #pragma once
-#include "JsoneResponsePacketSerializer.h"
 #include <WinSock2.h>
-#include <Windows.h>
+#include <windows.h>
+#pragma comment(lib, "ws2_32.lib")
+
 #include <map>
 #include <thread>
+#include <mutex>
+
 #include "IDatabase.h"
 #include "IRequestHandler.h"
-#include <mutex>
 #include <condition_variable>
 #include "Protocol.h"
 #include "RequestHandlerFactory.h"
+
 class Communicator
 {
 public:
@@ -30,4 +33,3 @@ private:
 	RequestHandlerFactory m_handlerFactory;
 	SOCKET _serverSocket;
 };
-
