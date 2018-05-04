@@ -16,6 +16,8 @@ Server::Server(IDatabase & db, Communicator communicator, RequestHandlerFactory 
 
 void Server::run()
 {
+	//Communicator communicator();
+	//m_communicator = 
 	m_communicator.bindAndListen();
 	
 }

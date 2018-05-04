@@ -4,7 +4,10 @@
 #include <vector>
 #include <bitset>
 #include <cstddef>
-
+#include "Question.h"
+#include "Buffer.h"
+#include "IRequestHandler.h"
+#include "HighscoreTable.h"
 using namespace std;
 
 		/*HANDLERS*/
@@ -145,7 +148,7 @@ struct GameData
 	unsigned int averageAnswerTime;
 };
 
-struct roomData
+struct RoomData
 {
 	unsigned int id;
 	string name;

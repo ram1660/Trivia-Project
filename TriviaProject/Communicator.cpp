@@ -54,7 +54,7 @@ void Communicator::handleRequests(SOCKET& client)
 			currentReq.buffer.push_back(bufferData[i]);
 		}
 		IRequestHandler* rq = m_clients.at(client);
-		if (rq->isRequestRelavent(currentReq))
+		if (rq->isRequestRelevant(currentReq))
 		{
 			RequestResult result = rq->handleRequest(currentReq);
 			if (result.newHandler != nullptr)

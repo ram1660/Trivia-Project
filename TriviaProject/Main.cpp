@@ -1,9 +1,11 @@
 #include "Server.h"
+#include "WSAInitializer.h"
 #include <exception>
 int main()
 {
 	try
 	{
+		WSAInitializer wsa;
 		Server server;
 		server.run();
 	}

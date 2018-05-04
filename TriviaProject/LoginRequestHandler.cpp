@@ -37,6 +37,7 @@ RequestResult LoginRequestHandler::login(Request r)
 		login.status = RESPONSE_SIGNIN;
 		Buffer b =JsonResponsePacketSerializer::serializeResponse(login);
 		result.response = b;
+		result.newHandler = m_handlerFactory->createMenuRequestHandler(); // Replace with MenuRequestHandler from the factory
 		result.newHandler = new LoginRequestHandler(m_loginManager, m_handlerFactory); // Replace with MenuRequestHandler from the factory
 	}
 	else
@@ -77,7 +78,7 @@ RequestResult LoginRequestHandler::signup(Request r)
 	return result;
 }
 
-bool LoginRequestHandler::isRequestRelavent(Request r)
+bool LoginRequestHandler::isRequestRelevant(Request r)
 {
 	if (r.id == REQUEST_SIGNUP || r.id == REQUEST_SIGNIN)
 		return true;

@@ -12,7 +12,7 @@ class LoginRequestHandler : public IRequestHandler
 public:
 	LoginRequestHandler(LoginManager* manager, RequestHandlerFactory* factory);
 	~LoginRequestHandler();
-	bool isRequestRelavent(Request r) override;
+	bool isRequestRelevant(Request r) override;
 	RequestResult handleRequest(Request r) override;
 private:
 	LoginManager* m_loginManager;

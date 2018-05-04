@@ -6,12 +6,20 @@ LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 	return login;
 }
 
+MenuRequestHandler * RequestHandlerFactory::createMenuRequestHandler()
+{
+	MenuRequestHandler* menu;
+	return menu;
+}
+
 RequestHandlerFactory::~RequestHandlerFactory()
 {
 	delete m_loginManager;
+	delete m_highscoreTable;
+	delete m_roomManager;
 }
 
-RequestHandlerFactory::RequestHandlerFactory() : m_loginManager(nullptr)
+RequestHandlerFactory::RequestHandlerFactory() : m_loginManager(nullptr), m_highscoreTable(nullptr), m_roomManager(nullptr)
 {
 }
 
