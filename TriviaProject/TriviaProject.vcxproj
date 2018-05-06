@@ -115,10 +115,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="JsoneResponsePacketSerializer.cpp" />
+    <ClCompile Include="JsonRequestPacketDeserializer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="response.h" />
+    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="HighScore.h" />
+    <ClInclude Include="IRequestHandler.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="JsoneResponsePacketSerializer.h" />
+    <ClInclude Include="JsonRequestPacketDeserializer.h" />
+    <ClInclude Include="Question.h" />
+    <ClInclude Include="Room.h" />
+    <ClInclude Include="structures.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
