@@ -28,10 +28,10 @@ RequestResult LoginRequestHandler::login(Request r)
 	b.buffer = r.buffer;
 	LoginRequest request = JsonRequestPacketDeserializer::deserializeLoginRequest(b);
 	RequestResult result;
-	m_loginManager->login(request.username, request.password);
 	
 	
-	if (find(m_loginManager->getLoggedUsers().begin(), m_loginManager->getLoggedUsers().end(), LoggedUser(request.username)) != m_loginManager->getLoggedUsers().end())
+	
+	if (m_loginManager->login(request.username, request.password))
 	{
 		LoginResponse login;
 		login.status = RESPONSE_SIGNIN;

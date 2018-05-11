@@ -1,6 +1,6 @@
 #pragma once
-#include <Windows.h>
+#include <vector>
 struct Buffer
 {
-	vector<byte> buffer;
+	std::vector<char> buffer;
 };

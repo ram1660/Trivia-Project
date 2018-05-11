@@ -4,16 +4,26 @@
 #include <vector>
 #include <bitset>
 #include <cstddef>
-#include "Question.h"
 #include "Buffer.h"
-#include "IRequestHandler.h"
-#include "HighscoreTable.h"
+class HighscoreTable;
+class IRequestHandler;
+class Question;
 using namespace std;
+
+struct RoomData
+{
+	unsigned int id;
+	string name;
+	string maxPlayers;
+	unsigned int timePerQuestion;
+	unsigned int isActive;
+};
+
 
 		/*HANDLERS*/
 struct RequestResult
 {
-	Buffer response;
+	Buffer* response;
 	IRequestHandler* newHandler;
 };
 
@@ -21,7 +31,7 @@ struct Request
 {
 	unsigned int id;
 	time_t receivalTime;
-	vector<byte> buffer;
+	vector<char*> buffer;
 };
 
 		/*RESPONSE*/
@@ -43,7 +53,7 @@ struct LogoutResponse
 struct getRoomsResponse
 {
 	unsigned int status;
-	vector<RoomData> rooms;
+	vector<RoomData*> rooms;
 };
 
 struct GetPlayersInRoomResponse
@@ -54,7 +64,7 @@ struct GetPlayersInRoomResponse
 struct HighscoreResponse
 {
 	unsigned int status;
-	vector<Highscore> Highscores;
+	vector<HighscoreTable> Highscores;
 
 };
 
@@ -105,17 +115,6 @@ struct SubmitAnswerResponse
 	unsigned int correctAnswerId;
 };
 
-struct GetGameResultResponse
-{
-	unsigned int status;
-	vector<PlayerResults> results;
-};
-
-struct ErrorResponse
-{
-	std::string message;
-};
-
 struct PlayerResults
 {
 	string username;
@@ -123,6 +122,18 @@ struct PlayerResults
 	unsigned int wrongAnswerCount;
 	unsigned int averageAnswerTime;
 };
+
+struct GetGameResultResponse
+{
+	unsigned int status;
+	vector<PlayerResults*> results;
+};
+
+struct ErrorResponse
+{
+	std::string message;
+};
+
 
 		/*REQUEST*/
 struct LoginRequest
@@ -142,17 +153,8 @@ struct SignupRequest
 		/*MANAGERS*/
 struct GameData
 {
-	Question currentQuestion;
+	Question* currentQuestion;
 	unsigned int correctAnswerCount;
 	unsigned int wrongAnswerCount;
 	unsigned int averageAnswerTime;
-};
-
-struct RoomData
-{
-	unsigned int id;
-	string name;
-	string maxPlayers;
-	unsigned int timePerQuestion;
-	unsigned int isActive;
 };

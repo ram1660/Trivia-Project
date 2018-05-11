@@ -1,5 +1,4 @@
 #pragma once
-#include "LoginManager.h"
 #include <iostream>
 class LoggedUser
 {

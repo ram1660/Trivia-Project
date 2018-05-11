@@ -2,13 +2,13 @@
 
 LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 {
-	LoginRequestHandler* login;
+	LoginRequestHandler* login = nullptr;
 	return login;
 }
 
 MenuRequestHandler * RequestHandlerFactory::createMenuRequestHandler()
 {
-	MenuRequestHandler* menu;
+	MenuRequestHandler* menu = nullptr;
 	return menu;
 }
 
@@ -23,6 +23,6 @@ RequestHandlerFactory::RequestHandlerFactory() : m_loginManager(nullptr), m_high
 {
 }
 
-RequestHandlerFactory::RequestHandlerFactory(LoginManager* manager) : m_loginManager(manager)
+RequestHandlerFactory::RequestHandlerFactory(LoginManager* loginManager, RoomManager* roomManager, HighscoreTable* highScoreTable) : m_loginManager(loginManager), m_roomManager(roomManager), m_highscoreTable(highScoreTable)
 {
 }

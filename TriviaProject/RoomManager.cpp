@@ -24,7 +24,7 @@ unsigned int RoomManager::getRoomState(int ID)
 	return 0;
 }
 
-std::vector<RoomMetadata> RoomManager::getRooms()
-{
-	return std::vector<RoomMetadata>();
-}
+//std::vector<RoomMetadata> RoomManager::getRooms()
+//{
+//	return std::vector<RoomMetadata>();
+//}

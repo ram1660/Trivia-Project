@@ -5,8 +5,10 @@
 #include "JsonRequestPacketDeserializer.h"
 #include "JsoneResponsePacketSerializer.h"
 #include "Protocol.h"
-#include "structures.h"
+class LoginManager;
+class RequestHandlerFactory;
 #include <algorithm>
+
 class LoginRequestHandler : public IRequestHandler
 {
 public:

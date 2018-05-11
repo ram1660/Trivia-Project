@@ -14,29 +14,31 @@ LoginManager::~LoginManager()
 	delete m_database;
 }
 
-void LoginManager::signup(std::string username, std::string password, std::string email)
+bool LoginManager::signup(std::string username, std::string password, std::string email)
 {
 	// Some SQL queries.
 	// Checking if the user exists.
 	// If he doesn't exists then entering the info the database but not into LoggedUsers vector.
-	// IF he exists don't do nothing.
+	// If he exists don't do nothing.
+	return false;
 }
 
-void LoginManager::login(std::string username, std::string password)
+bool LoginManager::login(std::string username, std::string password)
 {
 	// Some SQL queries.
 	// Checking if the user exists.
 	// If he is inserting him to LoggedUsers vector.
 	// Else don't insert
+	return false;
 }
 
-void LoginManager::logout()
+bool LoginManager::logout(std::string username)
 {
 	// Removing user from the vector.
-	// How do I remove the user from the vector without a username?
+	return false;
 }
 
-std::vector<LoggedUser> LoginManager::getLoggedUsers() const
+std::vector<LoggedUser*> LoginManager::getLoggedUsers() const
 {
 	return m_loggedUsers;
 }

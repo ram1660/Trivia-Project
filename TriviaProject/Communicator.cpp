@@ -140,8 +140,12 @@ string Communicator::getPaddedNumber(int num, int digits)
 
 void Communicator::sendData(SOCKET sc, Buffer message)
 {
-	//string test = message.buffer[10] + message.buffer[1];
-	const char* data = message.buffer; // Ask how the sending works.
+	string strMessage;
+	for (int i = 0; i < message.buffer.size(); i++)
+	{
+		strMessage[i] += message.buffer[i];
+	}
+	const char* data = strMessage.c_str();
 
 	if (send(sc, data, message.buffer.size(), 0) == INVALID_SOCKET)
 		throw std::exception("Error while sending message to client");
