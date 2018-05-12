@@ -37,8 +37,7 @@ RequestResult LoginRequestHandler::login(Request r)
 		login.status = RESPONSE_SIGNIN;
 		Buffer b =JsonResponsePacketSerializer::serializeResponse(login);
 		result.response = b;
-		result.newHandler = m_handlerFactory->createMenuRequestHandler(); // Replace with MenuRequestHandler from the factory
-		result.newHandler = new LoginRequestHandler(m_loginManager, m_handlerFactory); // Replace with MenuRequestHandler from the factory
+		result.newHandler = m_handlerFactory->createMenuRequestHandler();
 	}
 	else
 	{
@@ -59,7 +58,8 @@ RequestResult LoginRequestHandler::signup(Request r)
 	b.buffer = r.buffer;
 	SignupRequest request = JsonRequestPacketDeserializer::deserializeSignupRequest(b);
 	RequestResult result;
-	if (find(m_loginManager->getLoggedUsers().begin(), m_loginManager->getLoggedUsers().end(), LoggedUser(request.username)) != m_loginManager->getLoggedUsers().end())
+	
+	if (!(m_loginManager->signup(request.username, request.password, request.email)))
 	{
 		ErrorResponse error;
 		error.message = "ERROR: This user already exists!";
@@ -69,7 +69,6 @@ RequestResult LoginRequestHandler::signup(Request r)
 	}
 	else
 	{
-		m_loginManager->signup(request.username, request.password, request.email);
 		SignupResponse response;
 		response.status = RESPONSE_SIGNUP;
 		Buffer b = JsonResponsePacketSerializer::serializeResponse(response);

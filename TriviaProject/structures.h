@@ -23,7 +23,7 @@ struct RoomData
 		/*HANDLERS*/
 struct RequestResult
 {
-	Buffer* response;
+	Buffer response;
 	IRequestHandler* newHandler;
 };
 
@@ -31,7 +31,7 @@ struct Request
 {
 	unsigned int id;
 	time_t receivalTime;
-	vector<char*> buffer;
+	vector<char> buffer;
 };
 
 		/*RESPONSE*/

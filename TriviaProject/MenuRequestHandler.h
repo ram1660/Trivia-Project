@@ -10,6 +10,7 @@ class MenuRequestHandler : public IRequestHandler
 {
 public:
 	MenuRequestHandler();
+	MenuRequestHandler(LoggedUser* user, RoomManager* room, HighscoreTable* table, RequestHandlerFactory* factory);
 	~MenuRequestHandler();
 	bool isRequestRelevant(Request r) override; // Update the protocol with menu codes.
 	RequestResult handleRequest(Request r) override;

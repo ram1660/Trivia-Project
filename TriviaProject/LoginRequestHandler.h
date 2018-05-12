@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include "IRequestHandler.h"
 #include "structures.h"
 #include "RequestHandlerFactory.h"
@@ -7,7 +8,6 @@
 #include "Protocol.h"
 class LoginManager;
 class RequestHandlerFactory;
-#include <algorithm>
 
 class LoginRequestHandler : public IRequestHandler
 {

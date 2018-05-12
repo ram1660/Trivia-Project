@@ -1,7 +1,8 @@
 #include "Communicator.h"
-#define PORT 5023
 mutex m;
 condition_variable c;
+static const unsigned short PORT = 5023;
+static const unsigned int IFACE = 0;
 Communicator::Communicator()
 {
 	_serverSocket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -33,27 +34,19 @@ void Communicator::bindAndListen()
 	if (::listen(_serverSocket, SOMAXCONN) == SOCKET_ERROR)
 		throw std::exception(__FUNCTION__ " - listen");
 	std::cout << "Listening on port " << PORT << std::endl;
-
-	while (true)
-	{
-		std::cout << "Waiting for client connection request" << std::endl;
-		startThreadForNewClient();
-	}
 }
-
-void Communicator::handleRequests(SOCKET& client)
+void Communicator::handleRequests()
 {
 	Request currentReq;
 	while (true)
-	{	
-		int idRequest = getCode(client);
-		int bufferLen = atoi(getPartFromSocket(client, 2));
-		char *bufferData = getPartFromSocket(client, bufferLen);
-		for (int i = 0; i < 5; i++)
-		{
-			currentReq.buffer.push_back(bufferData[i]);
-		}
-		IRequestHandler* rq = m_clients.at(client);
+	{
+		unique_lock<mutex> requestsLocker(m);
+		if (m_messageQ.empty())
+			c.wait(requestsLocker);
+
+		IRequestHandler* rq = m_clients.at(m_messageQ.front().first);
+		currentReq = m_messageQ.front().second;
+		SOCKET client = m_messageQ.front().first;
 		if (rq->isRequestRelevant(currentReq))
 		{
 			RequestResult result = rq->handleRequest(currentReq);
@@ -69,6 +62,9 @@ void Communicator::handleRequests(SOCKET& client)
 			Buffer b = JsonResponsePacketSerializer::serializeResponse(response);
 			sendData(client, b);
 		}
+		requestsLocker.lock();
+		m_messageQ.pop_front();
+		requestsLocker.unlock();
 	}
 }
 
@@ -77,12 +73,49 @@ void Communicator::startThreadForNewClient()
 	SOCKET client_socket = ::accept(_serverSocket, NULL, NULL);
 	if (client_socket == INVALID_SOCKET)
 		throw std::exception(__FUNCTION__);
+	unique_lock<mutex> usersLocker(m);
 	m_clients.insert(pair<SOCKET, IRequestHandler*>(client_socket, m_handlerFactory.createLoginRequestHandler()));
-
-	thread t(&Communicator::handleRequests, ref(client_socket), client_socket);
+	usersLocker.unlock();
+	std::thread t(&Communicator::clientHandler, this, client_socket);
 	t.detach();
-
 }
+
+
+void Communicator::serve()
+{
+	bindAndListen();
+	std::thread tr(&Communicator::handleRequests, this);
+	while (true)
+	{
+		std::cout << "Waiting for client connection request" << std::endl;
+		startThreadForNewClient();
+	}
+}
+
+void Communicator::clientHandler(SOCKET clientSocket)
+{
+	try
+	{
+		Request currRequest;
+		int idRequest = getCode(clientSocket);
+		currRequest.id = idRequest;
+		int bufferLen = atoi(getPartFromSocket(clientSocket, 2));
+		char *bufferData = getPartFromSocket(clientSocket, bufferLen);
+		for (int i = 0; i < 5; i++)
+		{
+			currRequest.buffer.push_back(bufferData[i]);
+		}
+		unique_lock<mutex> requestsLocker(m);
+		m_messageQ.push_back(make_pair(clientSocket, currRequest));
+		requestsLocker.unlock();
+		c.notify_all();
+	}
+	catch (const std::exception& e)
+	{
+		closesocket(clientSocket);
+	}
+}
+
 
 int Communicator::getCode(SOCKET sc)
 {
@@ -142,9 +175,7 @@ void Communicator::sendData(SOCKET sc, Buffer message)
 {
 	string strMessage;
 	for (int i = 0; i < message.buffer.size(); i++)
-	{
 		strMessage[i] += message.buffer[i];
-	}
 	const char* data = strMessage.c_str();
 
 	if (send(sc, data, message.buffer.size(), 0) == INVALID_SOCKET)

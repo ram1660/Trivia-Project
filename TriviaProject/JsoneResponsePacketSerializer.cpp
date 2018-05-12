@@ -2,7 +2,8 @@
 
 Buffer JsonResponsePacketSerializer::serializeResponse(ErrorResponse s)
 {
-	
+	Buffer b;
+	return b;
 }
 
 Buffer JsonResponsePacketSerializer::serializeResponse(LoginResponse s)
