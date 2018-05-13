@@ -1,7 +1,7 @@
 #include "Communicator.h"
 mutex m;
 condition_variable c;
-static const unsigned short PORT = 5023;
+static const unsigned short PORT = 8080;
 static const unsigned int IFACE = 0;
 Communicator::Communicator()
 {
@@ -71,6 +71,7 @@ void Communicator::handleRequests()
 void Communicator::startThreadForNewClient()
 {
 	SOCKET client_socket = ::accept(_serverSocket, NULL, NULL);
+	cout << "New client has been conected!" << endl;
 	if (client_socket == INVALID_SOCKET)
 		throw std::exception(__FUNCTION__);
 	unique_lock<mutex> usersLocker(m);
@@ -99,7 +100,7 @@ void Communicator::clientHandler(SOCKET clientSocket)
 		Request currRequest;
 		int idRequest = getCode(clientSocket);
 		currRequest.id = idRequest;
-		int bufferLen = atoi(getPartFromSocket(clientSocket, 2));
+		int bufferLen = getLengthData(clientSocket);
 		char *bufferData = getPartFromSocket(clientSocket, bufferLen);
 		for (int i = 0; i < 5; i++)
 		{
@@ -116,19 +117,26 @@ void Communicator::clientHandler(SOCKET clientSocket)
 	}
 }
 
+int Communicator::getLengthData(SOCKET clientSocket)
+{
+	char* len = getPartFromSocket(clientSocket, 4);
+	int size = 0;
+	
+	for (int i = 0; i < 4; i++)
+	{
+		cout << (int)len[i] << endl;
+		//size |= (unsigned char)len[i] << (24 - (i - 1) * 8);
+	}
+	int x = strtol(len, nullptr, 0);
+	return x;
+}
+
 
 int Communicator::getCode(SOCKET sc)
 {
 	char* s = getPartFromSocket(sc, 1);
-	string msg(s);
-
-	if (msg == "")
-		return 0;
-
-	int res = std::atoi(s);
-	delete s;
+	int res = *s;
 	return  res;
-	return 0;
 }
 
 char * Communicator::getPartFromSocket(SOCKET sc, int bytesNumber)
@@ -143,7 +151,7 @@ char * Communicator::getPartFromSocket(SOCKET sc, int bytesNum, int flags)
 		return 0;
 
 	char* data = new char[bytesNum + 1];
-	int res = recv(sc, data, bytesNum, flags);
+	int res = recv(sc, data, bytesNum + 2, flags);
 
 	if (res == INVALID_SOCKET)
 	{

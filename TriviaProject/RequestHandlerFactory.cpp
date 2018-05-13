@@ -2,13 +2,13 @@
 
 LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 {
-	LoginRequestHandler* login = nullptr;
+	LoginRequestHandler* login = new LoginRequestHandler();
 	return login;
 }
 
-MenuRequestHandler * RequestHandlerFactory::createMenuRequestHandler()
+MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler()
 {
-	MenuRequestHandler* menu = nullptr;
+	MenuRequestHandler* menu = new MenuRequestHandler();
 	return menu;
 }
 
