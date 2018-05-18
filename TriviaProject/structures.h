@@ -147,8 +147,23 @@ struct SignupRequest
 	string password;
 	string email;
 };
+struct CreateRoomRequest
+{
+	string roomName;
+	unsigned int maxUsers;
+	unsigned int questionCount;
+	unsigned int answerTimeout;
+};
 
-		
+struct GetPlayersInRoomRequest
+{
+	unsigned int roomId;
+};
+
+struct JoinRoomRequest
+{
+	unsigned int roomId;
+};
 	
 		/*MANAGERS*/
 struct GameData

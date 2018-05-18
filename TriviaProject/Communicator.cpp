@@ -113,7 +113,7 @@ void Communicator::clientHandler(SOCKET clientSocket)
 		requestsLocker.unlock();
 		c.notify_all();
 	}
-	catch (const std::exception& e)
+	catch (const std::exception&)
 	{
 		closesocket(clientSocket);
 	}
@@ -125,7 +125,7 @@ void Communicator::sendData(SOCKET sc, Buffer message)
 	for (int i = 0; i < message.buffer.size(); i++)
 		strMessage[i] += message.buffer[i];
 	const char* data = strMessage.c_str();
-	int size = message.buffer.size();
+	int size = static_cast<int>(message.buffer.size());
 	if (send(sc, data, size, 0) == INVALID_SOCKET)
 		throw std::exception("Error while sending message to client");
 }

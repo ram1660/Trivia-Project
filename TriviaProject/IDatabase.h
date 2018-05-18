@@ -7,8 +7,8 @@
 class IDatabase
 {
 public:
-	virtual std::map<LoggedUser*, int> getHighscores() = 0;
+	virtual std::map<LoggedUser, int> getHighscores() = 0;
 	virtual bool doesUserExists(std::string username) = 0;
-	virtual std::list<Question*> getQuestion(int amount) = 0;
+	virtual std::list<Question> getQuestion(int amount) = 0;
 };
 
