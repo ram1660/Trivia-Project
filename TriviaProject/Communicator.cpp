@@ -1,7 +1,7 @@
 #include "Communicator.h"
-mutex m;
+mutex mRequests, mClients;
 condition_variable c;
-static const unsigned short PORT = 9080;
+static const unsigned short PORT = 7080;
 static const unsigned int IFACE = 0;
 Communicator::Communicator()
 {
@@ -38,9 +38,10 @@ void Communicator::bindAndListen()
 void Communicator::handleRequests()
 {
 	Request currentReq;
+	unique_lock<mutex> requestsLocker(mRequests);
+	requestsLocker.unlock();
 	while (true)
 	{
-		unique_lock<mutex> requestsLocker(m);
 		if (m_messageQ.empty())
 			c.wait(requestsLocker);
 
@@ -74,7 +75,7 @@ void Communicator::startThreadForNewClient()
 	cout << "New client has been conected!" << endl;
 	if (client_socket == INVALID_SOCKET)
 		throw std::exception(__FUNCTION__);
-	unique_lock<mutex> usersLocker(m);
+	unique_lock<mutex> usersLocker(mClients);
 	m_clients.insert(pair<SOCKET, IRequestHandler*>(client_socket, m_handlerFactory.createLoginRequestHandler()));
 	usersLocker.unlock();
 	std::thread t(&Communicator::clientHandler, this, client_socket);
@@ -102,11 +103,12 @@ void Communicator::clientHandler(SOCKET clientSocket)
 		currRequest.id = idRequest;
 		int bufferLen = info[1];
 		char *bufferData = getPartFromSocket(clientSocket, bufferLen);
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < bufferLen; i++)
 		{
 			currRequest.buffer.push_back(bufferData[i]);
 		}
-		unique_lock<mutex> requestsLocker(m);
+
+		unique_lock<mutex> requestsLocker(mRequests);
 		m_messageQ.push_back(make_pair(clientSocket, currRequest));
 		requestsLocker.unlock();
 		c.notify_all();
