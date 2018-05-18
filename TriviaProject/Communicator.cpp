@@ -148,6 +148,7 @@ vector<char> Communicator::getDataFromClient(SOCKET client, int size)
 		for (int i = 0; i < size; i++) data.push_back(bufferData[i]);
 		delete[] bufferData;
 	}
+	return data;
 }
 
 char * Communicator::getPartFromSocket(SOCKET sc, int bytesNumber)
