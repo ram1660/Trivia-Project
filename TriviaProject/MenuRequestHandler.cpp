@@ -28,7 +28,7 @@ bool MenuRequestHandler::isRequestRelevant(Request r)
 
 RequestResult MenuRequestHandler::handleRequest(Request r)
 {
-	return RequestResult();
+	
 }
 
 RequestResult MenuRequestHandler::signout(Request r)
