@@ -1,7 +1,7 @@
 #include "Communicator.h"
 mutex m;
 condition_variable c;
-static const unsigned short PORT = 8080;
+static const unsigned short PORT = 9080;
 static const unsigned int IFACE = 0;
 Communicator::Communicator()
 {
@@ -81,7 +81,6 @@ void Communicator::startThreadForNewClient()
 	t.detach();
 }
 
-
 void Communicator::serve()
 {
 	bindAndListen();
@@ -98,9 +97,10 @@ void Communicator::clientHandler(SOCKET clientSocket)
 	try
 	{
 		Request currRequest;
-		int idRequest = getCode(clientSocket);
+		vector<int> info = getInfoFromClient(clientSocket);
+		int idRequest = info[0];
 		currRequest.id = idRequest;
-		int bufferLen = getLengthData(clientSocket);
+		int bufferLen = info[1];
 		char *bufferData = getPartFromSocket(clientSocket, bufferLen);
 		for (int i = 0; i < 5; i++)
 		{
@@ -117,31 +117,41 @@ void Communicator::clientHandler(SOCKET clientSocket)
 	}
 }
 
-int Communicator::getLengthData(SOCKET clientSocket)
+void Communicator::sendData(SOCKET sc, Buffer message)
 {
-	char* len = getPartFromSocket(clientSocket, 4);
-	int size = 0;
-	
-	for (int i = 0; i < 4; i++)
-	{
-		cout << (int)len[i] << endl;
-		//size |= (unsigned char)len[i] << (24 - (i - 1) * 8);
-	}
-	int x = strtol(len, nullptr, 0);
-	return x;
+	string strMessage;
+	for (int i = 0; i < message.buffer.size(); i++)
+		strMessage[i] += message.buffer[i];
+	const char* data = strMessage.c_str();
+	int size = message.buffer.size();
+	if (send(sc, data, size, 0) == INVALID_SOCKET)
+		throw std::exception("Error while sending message to client");
 }
 
-
-int Communicator::getCode(SOCKET sc)
+#pragma region Extracting data from client section
+vector<int> Communicator::getInfoFromClient(SOCKET client)
 {
-	char* s = getPartFromSocket(sc, 1);
-	int res = *s;
-	return  res;
+	vector<int> info;
+	char* buffInfo = getPartFromSocket(client, 5);
+	int code = (int)buffInfo[0], size = 0;
+	for (int i = 1; i < 5; i++) size |= (unsigned char)buffInfo[i] << (24 - (i - 1) * 8);
+	info.push_back(code);
+	info.push_back(size);
+	return info;
+}
+vector<char> Communicator::getDataFromClient(SOCKET client, int size)
+{
+	vector<char> data;
+	if (size)
+	{
+		char* bufferData = getPartFromSocket(client, size);
+		for (int i = 0; i < size; i++) data.push_back(bufferData[i]);
+		delete[] bufferData;
+	}
 }
 
 char * Communicator::getPartFromSocket(SOCKET sc, int bytesNumber)
 {
-
 	return getPartFromSocket(sc, bytesNumber, 0);
 }
 
@@ -159,33 +169,6 @@ char * Communicator::getPartFromSocket(SOCKET sc, int bytesNum, int flags)
 		s += std::to_string(sc);
 		throw std::exception(s.c_str());
 	}
-
-	data[bytesNum] = 0;
 	return data;
-	return nullptr;
 }
-
-string Communicator::getStringPartFromSocket(SOCKET sc, int bytesNum)
-{
-	char* s = getPartFromSocket(sc, bytesNum, 0);
-	string res(s);
-	return res;
-}
-
-string Communicator::getPaddedNumber(int num, int digits)
-{
-	std::ostringstream ostr;
-	ostr << std::setw(digits) << std::setfill('0') << num;
-	return ostr.str();
-}
-
-void Communicator::sendData(SOCKET sc, Buffer message)
-{
-	string strMessage;
-	for (int i = 0; i < message.buffer.size(); i++)
-		strMessage[i] += message.buffer[i];
-	const char* data = strMessage.c_str();
-
-	if (send(sc, data, message.buffer.size(), 0) == INVALID_SOCKET)
-		throw std::exception("Error while sending message to client");
-}
+#pragma endregion

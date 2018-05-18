@@ -21,6 +21,7 @@ RequestResult LoginRequestHandler::handleRequest(Request r)
 		return login(r);
 	else if (r.id == REQUEST_SIGNUP)
 		return signup(r);
+	return RequestResult();
 }
 
 RequestResult LoginRequestHandler::login(Request r)
