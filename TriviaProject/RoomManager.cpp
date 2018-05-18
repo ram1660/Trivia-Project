@@ -26,6 +26,16 @@ unsigned int RoomManager::getRoomState(int ID) const
 	return state;
 }
 
+map<unsigned int, Room> RoomManager::getRooms() const
+{
+	return m_rooms;
+}
+
+Room RoomManager::getSpecificRoom(int id)
+{
+	return m_rooms.at(id);
+}
+
 //std::vector<RoomMetadata> RoomManager::getRooms()
 //{
 //	return std::vector<RoomMetadata>();

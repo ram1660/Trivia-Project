@@ -22,7 +22,7 @@ private:
 
 	RequestResult signout(Request r);
 	RequestResult getRooms(Request r);
-	RequestResult getPlayerInRoom(Request r);
+	RequestResult getPlayersInRoom(Request r);
 	RequestResult getHighscores(Request r);
 	RequestResult joinRoom(Request r);
 	RequestResult createRoom(Request r);

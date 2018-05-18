@@ -16,12 +16,10 @@ RequestResult LoginRequestHandler::handleRequest(Request r)
 {
 	Buffer b;
 	b.buffer = r.buffer;
-	LoginRequest request =  JsonRequestPacketDeserializer::deserializeLoginRequest(b);
 	if (r.id == REQUEST_SIGNIN)
 		return login(r);
-	else if (r.id == REQUEST_SIGNUP)
+	else
 		return signup(r);
-	return RequestResult();
 }
 
 RequestResult LoginRequestHandler::login(Request r)
@@ -32,14 +30,11 @@ RequestResult LoginRequestHandler::login(Request r)
 	b.buffer = r.buffer;
 	LoginRequest request = JsonRequestPacketDeserializer::deserializeLoginRequest(b);
 	RequestResult result;
-	
-	
-	
 	if (m_loginManager->login(request.username, request.password))
 	{
 		LoginResponse login;
 		login.status = RESPONSE_SIGNIN;
-		Buffer b =JsonResponsePacketSerializer::serializeResponse(login);
+		Buffer b = JsonResponsePacketSerializer::serializeResponse(login);
 		result.response = b;
 		result.newHandler = m_handlerFactory->createMenuRequestHandler();
 	}

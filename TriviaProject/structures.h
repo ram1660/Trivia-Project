@@ -65,7 +65,6 @@ struct HighscoreResponse
 {
 	unsigned int status;
 	vector<HighscoreTable> Highscores;
-
 };
 
 struct JoinRoomResponse
@@ -163,6 +162,11 @@ struct GetPlayersInRoomRequest
 struct JoinRoomRequest
 {
 	unsigned int roomId;
+};
+
+struct LogoutRequest
+{
+	string username;
 };
 	
 		/*MANAGERS*/
