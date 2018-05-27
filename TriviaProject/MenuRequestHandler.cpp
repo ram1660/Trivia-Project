@@ -148,7 +148,6 @@ RequestResult MenuRequestHandler::createRoom(Request r)
 	// Missing functions.
 	//CreateRoomRequest roomRequest = JsonRequestPacketDeserializer::deserializeRoomRequest(buff);
 	//result.response = JsonResponsePacketSerializer::serializeResponse(roomRequest);
-	
 	//m_roomManager->createRoom(); // No idea why createRoom needs LoggedUser.
-	return RequestResult();
+	return result;
 }

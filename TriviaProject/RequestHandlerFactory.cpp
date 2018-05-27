@@ -12,6 +12,18 @@ MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler()
 	return menu;
 }
 
+RoomAdminRequestHandler * RequestHandlerFactory::createRoomAdminRequestHandler()
+{
+	RoomAdminRequestHandler* roomAdmin = new RoomAdminRequestHandler();
+	return roomAdmin;
+}
+
+RoomMemberRequestHandler * RequestHandlerFactory::createRoomMemberRequestHandler()
+{
+	RoomMemberRequestHandler* roomMember = new RoomMemberRequestHandler();
+	return roomMember;
+}
+
 RequestHandlerFactory::~RequestHandlerFactory()
 {
 	delete m_loginManager;
