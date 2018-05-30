@@ -1,5 +1,5 @@
 #include "RoomManager.h"
-
+#define INVALID_ROOM_ID 9999
 
 
 RoomManager::RoomManager()
@@ -16,8 +16,9 @@ void RoomManager::createRoom(LoggedUser user)
 
 }
 
-void RoomManager::deleteRoom()
+void RoomManager::deleteRoom(unsigned int roomId)
 {
+
 }
 
 unsigned int RoomManager::getRoomState(int ID) const
@@ -33,7 +34,13 @@ map<unsigned int, Room> RoomManager::getRooms() const
 
 Room RoomManager::getSpecificRoom(int id)
 {
-	return m_rooms.at(id);
+	RoomData data;
+	data.id = INVALID_ROOM_ID;
+	Room room(data);
+	for (size_t i = 0; i < m_rooms.size(); i++)
+		if (m_rooms[i].getMetaRoom().id == id)
+			return m_rooms[i];
+	return room;
 }
 
 //std::vector<RoomMetadata> RoomManager::getRooms()

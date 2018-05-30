@@ -5,8 +5,8 @@
 #include "LoginManager.h"
 #include "HighscoreTable.h"
 #include "RoomManager.h"
-class RoomMemberRequestHandler;
-class RoomAdminRequestHandler;
+#include "RoomMemberRequestHandler.h"
+#include "RoomAdminRequestHandler.h"
 class RoomManager;
 class MenuRequestHandler;
 class HighscoreTable;

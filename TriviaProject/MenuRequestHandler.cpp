@@ -47,8 +47,8 @@ RequestResult MenuRequestHandler::signout(Request r)
 	Buffer buff;
 	buff.buffer = r.buffer;
 	// Missing function.
-	//LogoutResponse roomRequest = JsonRequestPacketDeserializer::deserializeJLogoutRequest(r);
-	if (/*A statement checks if the user exists*/) // statement may be removed because the designed of the client.
+	LogoutResponse roomRequest = JsonRequestPacketDeserializer::deserializeJLogoutRequest(r);
+	if (m_roomManager->) // statement may be removed because the designed of the client.
 	{
 		LogoutResponse response;
 		response.status = RESPONSE_SIGNOUT;
@@ -73,7 +73,7 @@ RequestResult MenuRequestHandler::getRooms(Request r)
 	Buffer buffer;
 	map<unsigned int, Room> rooms = m_roomManager->getRooms();
 	
-	return RequestResult();
+	return result;
 }
 
 RequestResult MenuRequestHandler::getPlayersInRoom(Request r)
@@ -117,21 +117,31 @@ RequestResult MenuRequestHandler::joinRoom(Request r)
 	Buffer buff;
 	buff.buffer = r.buffer;
 	JoinRoomRequest roomRequest;
-	
+	RoomData dataRoom;
+	dataRoom.id = roomRequest.roomId;
 	// Missing function.
 	//JoinRoomRequest roomRequest = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(r);
-	if (m_roomManager->getSpecificRoom(roomRequest.roomId).addUser()) // Missing the user who wants to join.
+	if (find(m_roomManager->getRooms().begin(), m_roomManager->getRooms().end(), Room(dataRoom)) == m_roomManager->getRooms().end())
 	{
+		ErrorResponse error;
+		error.message = "ERROR: This room doesn't exists!";
+		Buffer b = JsonResponsePacketSerializer::serializeResponse(error);
+		result.response = b;
+		result.newHandler = nullptr;
+	}
+	else if (find(m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().begin(), m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().end(), LoggedUser(roomRequest.username)) != m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().end())
+	{
+		m_roomManager->getSpecificRoom(roomRequest.roomId).addUser(roomRequest.username);
 		JoinRoomResponse response;
 		response.status = RESPONSE_JOIN_ROOM;
 		//Buffer b = JsonResponsePacketSerializer::serializeResponse(response);
 		//result.response = b;
-		//result.newHandler = m_handlerFactory->
+		result.newHandler = m_handlerFactory->createRoomMemberRequestHandler();
 	}
 	else
 	{
 		ErrorResponse error;
-		error.message = "ERROR: This room doesn't exists!";
+		error.message = "ERROR: User is already inside this room!";
 		Buffer b = JsonResponsePacketSerializer::serializeResponse(error);
 		result.response = b;
 		result.newHandler = nullptr;
