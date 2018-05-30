@@ -12,6 +12,8 @@ class MenuRequestHandler;
 class HighscoreTable;
 class LoginManager;
 class LoginRequestHandler;
+class RoomAdminRequestHandler;
+class RoomMemberRequestHandler;
 class RequestHandlerFactory
 {
 public:

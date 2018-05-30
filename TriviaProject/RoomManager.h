@@ -13,7 +13,8 @@ public:
 	//vector<RoomMetaData> getRooms(); // What is that mean RoomMetadata?
 	map<unsigned int, Room> getRooms() const;
 	Room getSpecificRoom(int id);
+	Room getUserRoom(string user);
 private:
-	map<unsigned int, Room> m_rooms; // roomID could be unsigned int?
+	map<unsigned int, Room> m_rooms;
 };
 

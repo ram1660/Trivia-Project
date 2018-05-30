@@ -39,3 +39,10 @@ RoomData Room::getMetaRoom() const
 {
 	return m_metadata;
 }
+
+bool Room::operator==(Room const & other)
+{
+	return (this->getMetaRoom().id == other.getMetaRoom().id);
+}
+
+

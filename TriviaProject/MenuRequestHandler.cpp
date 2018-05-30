@@ -1,7 +1,5 @@
 #include "MenuRequestHandler.h"
 
-
-
 MenuRequestHandler::MenuRequestHandler()
 {
 }
@@ -47,23 +45,13 @@ RequestResult MenuRequestHandler::signout(Request r)
 	Buffer buff;
 	buff.buffer = r.buffer;
 	// Missing function.
-	LogoutResponse roomRequest = JsonRequestPacketDeserializer::deserializeJLogoutRequest(r);
-	if (m_roomManager->) // statement may be removed because the designed of the client.
-	{
-		LogoutResponse response;
-		response.status = RESPONSE_SIGNOUT;
-		//Buffer b = JsonResponsePacketSerializer::serializeResponse(response);
-		//result.response = b;
-		//result.newHandler = m_handlerFactory->
-	}
-	else
-	{
-		ErrorResponse error;
-		error.message = "ERROR: This user doesn't exists!";
-		Buffer b = JsonResponsePacketSerializer::serializeResponse(error);
-		result.response = b;
-		result.newHandler = nullptr;
-	}
+	//LogoutRequest roomRequest = JsonRequestPacketDeserializer::deserializeJLogoutRequest(r);
+	//m_roomManager->getUserRoom(roomRequest.username).removeUser(roomRequest.username);
+	LogoutResponse response;
+	response.status = RESPONSE_SIGNOUT;
+	//Buffer b = JsonResponsePacketSerializer::serializeResponse(response);
+	//result.response = b;
+	result.newHandler = m_handlerFactory->createLoginRequestHandler();
 	return result;
 }
 
@@ -121,7 +109,10 @@ RequestResult MenuRequestHandler::joinRoom(Request r)
 	dataRoom.id = roomRequest.roomId;
 	// Missing function.
 	//JoinRoomRequest roomRequest = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(r);
-	if (find(m_roomManager->getRooms().begin(), m_roomManager->getRooms().end(), Room(dataRoom)) == m_roomManager->getRooms().end())
+	LoggedUser temp(roomRequest.username);
+	Room tempRoom(dataRoom);
+	map<unsigned int, Room>::iterator it = m_roomManager->getRooms().find(tempRoom.getMetaRoom().id);
+	if (it != m_roomManager->getRooms().end())
 	{
 		ErrorResponse error;
 		error.message = "ERROR: This room doesn't exists!";
@@ -129,7 +120,7 @@ RequestResult MenuRequestHandler::joinRoom(Request r)
 		result.response = b;
 		result.newHandler = nullptr;
 	}
-	else if (find(m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().begin(), m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().end(), LoggedUser(roomRequest.username)) != m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().end())
+	else if (it == m_roomManager->getRooms().end())
 	{
 		m_roomManager->getSpecificRoom(roomRequest.roomId).addUser(roomRequest.username);
 		JoinRoomResponse response;

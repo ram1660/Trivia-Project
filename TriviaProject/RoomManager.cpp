@@ -43,6 +43,14 @@ Room RoomManager::getSpecificRoom(int id)
 	return room;
 }
 
+Room RoomManager::getUserRoom(string user)
+{
+	LoggedUser targetUser(user);
+	for (auto room : m_rooms)
+		if (find(room.second.getAllUsers().begin(), room.second.getAllUsers().end(), targetUser) != room.second.getAllUsers().end())
+			return room.second;
+}
+
 //std::vector<RoomMetadata> RoomManager::getRooms()
 //{
 //	return std::vector<RoomMetadata>();

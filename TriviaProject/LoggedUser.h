@@ -6,7 +6,7 @@ public:
 	LoggedUser();
 	~LoggedUser();
 	LoggedUser(std::string name);
-	bool operator==(LoggedUser const &user);
+	bool operator==(const LoggedUser &user);
 	std::string getUsername();
 private:
 	std::string m_username;
