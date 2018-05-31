@@ -1,7 +1,8 @@
-/*#pragma once
+#pragma once
 #include <vector>
-#include "LoggedUser.h"
 #include "IDatabase.h"
+class LoggedUser;
+class IDatabase;
 class LoginManager
 {
 public:
@@ -17,4 +18,4 @@ private:
 	IDatabase* m_database;
 	std::vector<LoggedUser*> m_loggedUsers;
 };
-*/
+

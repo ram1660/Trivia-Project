@@ -1,6 +1,6 @@
 #include "JsoneResponsePacketSerializer.h"
 using nlohmann::json;
-std::vector<char> JasonResponsePacketSerializer::serializeResponse(ErrorResponse e)
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(ErrorResponse e)
 {
 	json j;
 	j["message"] = e.message;		
@@ -9,7 +9,7 @@ std::vector<char> JasonResponsePacketSerializer::serializeResponse(ErrorResponse
 	return buffer;
 }
 
-std::vector<char> JasonResponsePacketSerializer::serializeResponse(LoginResponse l)
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(LoginResponse l)
 {
 	json j;
 	j["status"] = l.status;
@@ -18,7 +18,7 @@ std::vector<char> JasonResponsePacketSerializer::serializeResponse(LoginResponse
 	return buffer;
 }
 
-std::vector<char> JasonResponsePacketSerializer::serializeResponse(SignupResponse s)
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(SignupResponse s)
 {
 	json j;
 	j["status"] = s.status;

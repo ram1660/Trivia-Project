@@ -164,6 +164,7 @@
     <ClInclude Include="sqlite_modern_cpp\utility\uncaught_exceptions.h" />
     <ClInclude Include="sqlite_modern_cpp\utility\utf16_utf8.h" />
     <ClInclude Include="structures.h" />
+    <ClInclude Include="User.h" />
     <ClInclude Include="WSAInitializer.h" />
   </ItemGroup>
   <ItemGroup>

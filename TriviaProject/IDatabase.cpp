@@ -6,7 +6,7 @@ int callbackQuestion(void *data, int argc, char **argv, char **azColName);
 std::list<LoggedUser> m_users;
 std::list<Question> m_question;
 
-bool IDataBase::open()
+bool IDatabase::open()
 {
 	std::string dbFileName = "MyDB.sqlite";
 
@@ -43,14 +43,14 @@ bool IDataBase::open()
 	return true;
 }
 
-void IDataBase::clear()
+void IDatabase::clear()
 {
 	m_users.clear();
 }
 
 // ******************* User ******************* 
 
-void IDataBase::createUser(User& user)
+void IDatabase::createUser(User& user)
 {
 	m_users.clear();
 	std::string sql = "INSERT INTO USERS VALUES {" + user.getUsername() + "," + user.getEmail() + "," + user.getPassword() + "};";
@@ -63,7 +63,7 @@ void IDataBase::createUser(User& user)
 	}
 }
 
-void IDataBase::deleteUser(LoggedUser& user)
+void IDatabase::deleteUser(LoggedUser& user)
 {
 	m_users.clear();
 	if(doesUserExists(user.getUsername()))
@@ -80,7 +80,15 @@ void IDataBase::deleteUser(LoggedUser& user)
 	}
 }
 
-bool IDataBase::doesUserExists(std::string username)
+IDatabase::IDatabase()
+{
+}
+
+IDatabase::~IDatabase()
+{
+}
+
+bool IDatabase::doesUserExists(std::string username)
 {
 	std::string sqlStatement = "SELECT EXISTS (SELECT 1 from USERS WHERE NAMES = '" + username + "');";
 	char* errMessage = nullptr;
@@ -94,7 +102,7 @@ bool IDataBase::doesUserExists(std::string username)
 	return bool(res);
 }
 
-bool IDataBase::DoesPasswordMatchUser(std::string username, std::string password)
+bool IDatabase::DoesPasswordMatchUser(std::string username, std::string password)
 {
 	std::string sqlStatement = "SELECT EXISTS (SELECT 1 from users WHERE name = '" + username + "' AND password = '" + password + "');";
 	char* errMessage = nullptr;

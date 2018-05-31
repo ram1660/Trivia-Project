@@ -4,20 +4,21 @@
 #include <map>
 #include <string>
 #include <list>
-#include "sqlite3.h"
-#include <stdlib.h>
 #include <io.h>
+#include <stdlib.h>
+#include "LoggedUser.h"
+#include "sqlite3.h"
 #include "User.h"
-#include "loggedUser.h"
 #include "Question.h"
 
 
-class IDataBase
+class IDatabase
 {
 public:
 	//std::list<Question> getQuestions (int);
 	//std::map<LoggedUser, int> getHighscores();
-
+	IDatabase();
+	~IDatabase();
 	//user
 	bool doesUserExists(std::string username);
 	void createUser(User& user);

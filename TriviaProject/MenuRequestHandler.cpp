@@ -87,7 +87,8 @@ RequestResult MenuRequestHandler::getPlayersInRoom(Request r)
 	{
 		ErrorResponse error;
 		error.message = "ERROR: This room doesn't exists!";
-		Buffer b = JsonResponsePacketSerializer::serializeResponse(error);
+		Buffer b;
+		b.buffer = JsonResponsePacketSerializer::serializeResponse(error);
 		result.response = b;
 		result.newHandler = nullptr;
 	}
@@ -116,7 +117,8 @@ RequestResult MenuRequestHandler::joinRoom(Request r)
 	{
 		ErrorResponse error;
 		error.message = "ERROR: This room doesn't exists!";
-		Buffer b = JsonResponsePacketSerializer::serializeResponse(error);
+		Buffer b;
+		b.buffer = JsonResponsePacketSerializer::serializeResponse(error);
 		result.response = b;
 		result.newHandler = nullptr;
 	}
@@ -133,7 +135,8 @@ RequestResult MenuRequestHandler::joinRoom(Request r)
 	{
 		ErrorResponse error;
 		error.message = "ERROR: User is already inside this room!";
-		Buffer b = JsonResponsePacketSerializer::serializeResponse(error);
+		Buffer b;
+		b.buffer = JsonResponsePacketSerializer::serializeResponse(error);
 		result.response = b;
 		result.newHandler = nullptr;
 	}

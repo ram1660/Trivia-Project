@@ -9,7 +9,7 @@ public:
 	HighscoreTable();
 	HighscoreTable(IDatabase * db);
 	~HighscoreTable();
-	std::map<LoggedUser, int> getHighscores() override;
+	std::map<LoggedUser, int> getHighscores();
 private:
 	IDatabase * m_database;
 };

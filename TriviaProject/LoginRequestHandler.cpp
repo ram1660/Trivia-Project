@@ -34,7 +34,8 @@ RequestResult LoginRequestHandler::login(Request r)
 	{
 		LoginResponse login;
 		login.status = RESPONSE_SIGNIN;
-		Buffer b = JsonResponsePacketSerializer::serializeResponse(login);
+		Buffer b;
+		b.buffer = JsonResponsePacketSerializer::serializeResponse(login);
 		result.response = b;
 		result.newHandler = m_handlerFactory->createMenuRequestHandler();
 	}
@@ -42,7 +43,8 @@ RequestResult LoginRequestHandler::login(Request r)
 	{
 		ErrorResponse error;
 		error.message = "ERROR: This user doesn't exists!";
-		Buffer b = JsonResponsePacketSerializer::serializeResponse(error);
+		Buffer b;
+		b.buffer = JsonResponsePacketSerializer::serializeResponse(error);
 		result.response = b;
 		result.newHandler = nullptr;
 	}
@@ -62,7 +64,8 @@ RequestResult LoginRequestHandler::signup(Request r)
 	{
 		ErrorResponse error;
 		error.message = "ERROR: This user already exists!";
-		Buffer b = JsonResponsePacketSerializer::serializeResponse(error);
+		Buffer b;
+		b.buffer = JsonResponsePacketSerializer::serializeResponse(error);
 		result.response = b;
 		result.newHandler = nullptr;
 	}
@@ -70,7 +73,8 @@ RequestResult LoginRequestHandler::signup(Request r)
 	{
 		SignupResponse response;
 		response.status = RESPONSE_SIGNUP;
-		Buffer b = JsonResponsePacketSerializer::serializeResponse(response);
+		Buffer b;
+		b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
 		result.newHandler = new LoginRequestHandler(m_loginManager, m_handlerFactory);
 	}
 	return result;

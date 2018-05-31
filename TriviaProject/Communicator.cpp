@@ -60,7 +60,8 @@ void Communicator::handleRequests()
 			ErrorResponse response;
 			// Inform a new protocol.
 			response.message = RESPONSE_ERROR;
-			Buffer b = JsonResponsePacketSerializer::serializeResponse(response);
+			Buffer b;
+			b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
 			sendData(client, b);
 		}
 		requestsLocker.lock();

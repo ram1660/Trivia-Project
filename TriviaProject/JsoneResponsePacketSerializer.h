@@ -3,10 +3,10 @@
 #include "structures.h"
 #include <string>
 #include "json.hpp"
-class JasonResponsePacketSerializer
+class JsonResponsePacketSerializer
 {
 public:
-	std::vector<char> serializeResponse(ErrorResponse);
-	std::vector<char> serializeResponse(LoginResponse);
-	std::vector<char> serializeResponse(SignupResponse);
+	static std::vector<char> serializeResponse(ErrorResponse);
+	static std::vector<char> serializeResponse(LoginResponse);
+	static std::vector<char> serializeResponse(SignupResponse);
 };
