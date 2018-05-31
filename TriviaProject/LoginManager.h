@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <vector>
 #include "LoggedUser.h"
 #include "IDatabase.h"
@@ -17,4 +17,4 @@ private:
 	IDatabase* m_database;
 	std::vector<LoggedUser*> m_loggedUsers;
 };
-
+*/
