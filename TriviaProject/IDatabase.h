@@ -21,7 +21,7 @@ public:
 	~IDatabase();
 	//user
 	bool doesUserExists(std::string username);
-	void createUser(User& user);
+	void createUser(std::string username, std::string password, std::string email);
 	void deleteUser(LoggedUser& user);
 	bool DoesPasswordMatchUser(std::string username, std::string password);
 

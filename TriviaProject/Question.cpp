@@ -1,6 +1,6 @@
 #include "Question.h"
 
-Question::Question(std::string question, std::vector<std::string> possibleAnswers, std::string correctAnswer) : m_question(question), m_possibleAnswers(possibleAnswers), m_correctAnswer(correctAnswer)
+Question::Question(std::string question, std::string correctAnswer, std::string firstPossibleAnswer, std::string secondPossibleAnswer, std::string thirdPossibleAnswer) : m_question(question), firstAnswer(firstPossibleAnswer), secondAnswer(secondPossibleAnswer), thirdAnswer(thirdPossibleAnswer), m_correctAnswer(correctAnswer)
 {
 }
 
@@ -11,7 +11,12 @@ std::string Question::getQuestion()
 
 std::vector<std::string> Question::getPossibleAnswers()
 {
-	return m_possibleAnswers;
+	std::vector<std::string> possibleAnswers;
+	possibleAnswers.push_back(firstAnswer);
+	possibleAnswers.push_back(secondAnswer);
+	possibleAnswers.push_back(thirdAnswer);
+
+	return possibleAnswers;
 }
 
 std::string Question::getCorrectAnswer()

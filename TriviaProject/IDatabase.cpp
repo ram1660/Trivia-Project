@@ -50,10 +50,10 @@ void IDatabase::clear()
 
 // ******************* User ******************* 
 
-void IDatabase::createUser(User& user)
+void IDatabase::createUser(std::string username, std::string password, std::string email)
 {
 	m_users.clear();
-	std::string sql = "INSERT INTO USERS VALUES {" + user.getUsername() + "," + user.getEmail() + "," + user.getPassword() + "};";
+	std::string sql = "INSERT INTO USERS VALUES {" + username + "," + email + "," + password + "};";
 	const char* sqlStatement = sql.c_str();
 	char *errMessage = nullptr;
 	int res = sqlite3_exec(db, sqlStatement, callbackUser, nullptr, &errMessage);
