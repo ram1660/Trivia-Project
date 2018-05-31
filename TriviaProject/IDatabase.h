@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "LoggedUser.h"
 #include "sqlite3.h"
-#include "User.h"
+//#include "User.h"
 #include "Question.h"
 
 
