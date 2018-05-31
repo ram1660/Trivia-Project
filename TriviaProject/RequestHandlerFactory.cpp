@@ -2,14 +2,26 @@
 
 LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 {
-	LoginRequestHandler* login = nullptr;
+	LoginRequestHandler* login = new LoginRequestHandler();
 	return login;
 }
 
-MenuRequestHandler * RequestHandlerFactory::createMenuRequestHandler()
+MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler()
 {
-	MenuRequestHandler* menu = nullptr;
+	MenuRequestHandler* menu = new MenuRequestHandler();
 	return menu;
+}
+
+RoomAdminRequestHandler * RequestHandlerFactory::createRoomAdminRequestHandler()
+{
+	RoomAdminRequestHandler* roomAdmin = new RoomAdminRequestHandler();
+	return roomAdmin;
+}
+
+RoomMemberRequestHandler * RequestHandlerFactory::createRoomMemberRequestHandler()
+{
+	RoomMemberRequestHandler* roomMember = new RoomMemberRequestHandler();
+	return roomMember;
 }
 
 RequestHandlerFactory::~RequestHandlerFactory()

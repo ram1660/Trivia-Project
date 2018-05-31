@@ -8,10 +8,13 @@ public:
 	RoomManager();
 	~RoomManager();
 	void createRoom(LoggedUser user); // Possibly an admin?
-	void deleteRoom(); // With what parameters can we delete a room from a map if we don't have a key.
-	unsigned int getRoomState(int ID); // Not clear what that's mean.
-	//std::vector<Room&> getRooms(); // What is that mean RoomMetadata?
+	void deleteRoom(unsigned int roomId); // With what parameters can we delete a room from a map if we don't have a key.
+	unsigned int getRoomState(int ID) const; // Not clear what that's mean.
+	//vector<RoomMetaData> getRooms(); // What is that mean RoomMetadata?
+	map<unsigned int, Room> getRooms() const;
+	Room getSpecificRoom(int id);
+	Room getUserRoom(string user);
 private:
-	std::map<unsigned int, Room&> m_rooms; // roomID could be unsigned int?
+	map<unsigned int, Room> m_rooms;
 };
 

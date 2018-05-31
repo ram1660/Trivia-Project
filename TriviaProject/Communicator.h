@@ -3,7 +3,6 @@
 #pragma comment(lib, "ws2_32.lib")
 #include <WinSock2.h>
 #include <Windows.h>
-
 #include <map>
 #include <thread>
 #include <mutex>
@@ -20,18 +19,17 @@ class Communicator
 public:
 	void bindAndListen();
 	void handleRequests();
+	void serve();
 	Communicator();
 	~Communicator();
 
 private:
 	void startThreadForNewClient();
-	int getCode(SOCKET sc);
+	vector<char> getDataFromClient(SOCKET client, int size);
 	char* getPartFromSocket(SOCKET sc, int bytesNumber);
 	char* getPartFromSocket(SOCKET sc, int bytesNum, int flags);
-	string getStringPartFromSocket(SOCKET sc, int bytesNum);
-	string getPaddedNumber(int num, int digits);
+	vector<int> getInfoFromClient(SOCKET client);
 	void sendData(SOCKET sc, Buffer message);
-	void serve();
 	void clientHandler(SOCKET clientSocket);
 	std::map<SOCKET, IRequestHandler*> m_clients; // Shared resource
 	RequestHandlerFactory m_handlerFactory;

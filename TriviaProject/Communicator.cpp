@@ -1,7 +1,7 @@
 #include "Communicator.h"
-mutex m;
+mutex mRequests, mClients;
 condition_variable c;
-static const unsigned short PORT = 5023;
+static const unsigned short PORT = 7080;
 static const unsigned int IFACE = 0;
 Communicator::Communicator()
 {
@@ -38,9 +38,10 @@ void Communicator::bindAndListen()
 void Communicator::handleRequests()
 {
 	Request currentReq;
+	unique_lock<mutex> requestsLocker(mRequests);
+	requestsLocker.unlock();
 	while (true)
 	{
-		unique_lock<mutex> requestsLocker(m);
 		if (m_messageQ.empty())
 			c.wait(requestsLocker);
 
@@ -71,15 +72,15 @@ void Communicator::handleRequests()
 void Communicator::startThreadForNewClient()
 {
 	SOCKET client_socket = ::accept(_serverSocket, NULL, NULL);
+	cout << "New client has been conected!" << endl;
 	if (client_socket == INVALID_SOCKET)
 		throw std::exception(__FUNCTION__);
-	unique_lock<mutex> usersLocker(m);
+	unique_lock<mutex> usersLocker(mClients);
 	m_clients.insert(pair<SOCKET, IRequestHandler*>(client_socket, m_handlerFactory.createLoginRequestHandler()));
 	usersLocker.unlock();
 	std::thread t(&Communicator::clientHandler, this, client_socket);
 	t.detach();
 }
-
 
 void Communicator::serve()
 {
@@ -97,43 +98,63 @@ void Communicator::clientHandler(SOCKET clientSocket)
 	try
 	{
 		Request currRequest;
-		int idRequest = getCode(clientSocket);
+		vector<int> info = getInfoFromClient(clientSocket);
+		int idRequest = info[0];
 		currRequest.id = idRequest;
-		int bufferLen = atoi(getPartFromSocket(clientSocket, 2));
+		int bufferLen = info[1];
 		char *bufferData = getPartFromSocket(clientSocket, bufferLen);
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < bufferLen; i++)
 		{
 			currRequest.buffer.push_back(bufferData[i]);
 		}
-		unique_lock<mutex> requestsLocker(m);
+
+		unique_lock<mutex> requestsLocker(mRequests);
 		m_messageQ.push_back(make_pair(clientSocket, currRequest));
 		requestsLocker.unlock();
 		c.notify_all();
 	}
-	catch (const std::exception& e)
+	catch (const std::exception&)
 	{
 		closesocket(clientSocket);
 	}
 }
 
-
-int Communicator::getCode(SOCKET sc)
+void Communicator::sendData(SOCKET sc, Buffer message)
 {
-	char* s = getPartFromSocket(sc, 1);
-	string msg(s);
+	string strMessage;
+	for (int i = 0; i < message.buffer.size(); i++)
+		strMessage[i] += message.buffer[i];
+	const char* data = strMessage.c_str();
+	int size = static_cast<int>(message.buffer.size());
+	if (send(sc, data, size, 0) == INVALID_SOCKET)
+		throw std::exception("Error while sending message to client");
+}
 
-	if (msg == "")
-		return 0;
-
-	int res = std::atoi(s);
-	delete s;
-	return  res;
-	return 0;
+#pragma region Extracting data from client section
+vector<int> Communicator::getInfoFromClient(SOCKET client)
+{
+	vector<int> info;
+	char* buffInfo = getPartFromSocket(client, 5);
+	int code = (int)buffInfo[0], size = 0;
+	for (int i = 1; i < 5; i++) size |= (unsigned char)buffInfo[i] << (24 - (i - 1) * 8);
+	info.push_back(code);
+	info.push_back(size);
+	return info;
+}
+vector<char> Communicator::getDataFromClient(SOCKET client, int size)
+{
+	vector<char> data;
+	if (size)
+	{
+		char* bufferData = getPartFromSocket(client, size);
+		for (int i = 0; i < size; i++) data.push_back(bufferData[i]);
+		delete[] bufferData;
+	}
+	return data;
 }
 
 char * Communicator::getPartFromSocket(SOCKET sc, int bytesNumber)
 {
-
 	return getPartFromSocket(sc, bytesNumber, 0);
 }
 
@@ -143,7 +164,7 @@ char * Communicator::getPartFromSocket(SOCKET sc, int bytesNum, int flags)
 		return 0;
 
 	char* data = new char[bytesNum + 1];
-	int res = recv(sc, data, bytesNum, flags);
+	int res = recv(sc, data, bytesNum + 2, flags);
 
 	if (res == INVALID_SOCKET)
 	{
@@ -151,33 +172,6 @@ char * Communicator::getPartFromSocket(SOCKET sc, int bytesNum, int flags)
 		s += std::to_string(sc);
 		throw std::exception(s.c_str());
 	}
-
-	data[bytesNum] = 0;
 	return data;
-	return nullptr;
 }
-
-string Communicator::getStringPartFromSocket(SOCKET sc, int bytesNum)
-{
-	char* s = getPartFromSocket(sc, bytesNum, 0);
-	string res(s);
-	return res;
-}
-
-string Communicator::getPaddedNumber(int num, int digits)
-{
-	std::ostringstream ostr;
-	ostr << std::setw(digits) << std::setfill('0') << num;
-	return ostr.str();
-}
-
-void Communicator::sendData(SOCKET sc, Buffer message)
-{
-	string strMessage;
-	for (int i = 0; i < message.buffer.size(); i++)
-		strMessage[i] += message.buffer[i];
-	const char* data = strMessage.c_str();
-
-	if (send(sc, data, message.buffer.size(), 0) == INVALID_SOCKET)
-		throw std::exception("Error while sending message to client");
-}
+#pragma endregion

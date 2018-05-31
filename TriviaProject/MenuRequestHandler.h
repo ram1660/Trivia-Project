@@ -2,6 +2,7 @@
 #include "IRequestHandler.h"
 #include "structures.h"
 #include "RequestHandlerFactory.h"
+#include <algorithm>
 class LoggedUser;
 class RoomManager;
 class RequestHandlerFactory;
@@ -12,7 +13,7 @@ public:
 	MenuRequestHandler();
 	MenuRequestHandler(LoggedUser* user, RoomManager* room, HighscoreTable* table, RequestHandlerFactory* factory);
 	~MenuRequestHandler();
-	bool isRequestRelevant(Request r) override; // Update the protocol with menu codes.
+	bool isRequestRelevant(Request r) override;
 	RequestResult handleRequest(Request r) override;
 private:
 	LoggedUser* m_user;
@@ -22,7 +23,7 @@ private:
 
 	RequestResult signout(Request r);
 	RequestResult getRooms(Request r);
-	RequestResult getPlayerInRoom(Request r);
+	RequestResult getPlayersInRoom(Request r);
 	RequestResult getHighscores(Request r);
 	RequestResult joinRoom(Request r);
 	RequestResult createRoom(Request r);

@@ -5,11 +5,15 @@
 #include "LoginManager.h"
 #include "HighscoreTable.h"
 #include "RoomManager.h"
+#include "RoomMemberRequestHandler.h"
+#include "RoomAdminRequestHandler.h"
 class RoomManager;
 class MenuRequestHandler;
 class HighscoreTable;
 class LoginManager;
 class LoginRequestHandler;
+class RoomAdminRequestHandler;
+class RoomMemberRequestHandler;
 class RequestHandlerFactory
 {
 public:
@@ -18,6 +22,8 @@ public:
 	RequestHandlerFactory(LoginManager* loginManager, RoomManager* roomManager, HighscoreTable* highScoreTable);
 	LoginRequestHandler* createLoginRequestHandler();
 	MenuRequestHandler* createMenuRequestHandler();
+	RoomAdminRequestHandler* createRoomAdminRequestHandler();
+	RoomMemberRequestHandler* createRoomMemberRequestHandler();
 private:
 	LoginManager* m_loginManager;
 	RoomManager* m_roomManager;

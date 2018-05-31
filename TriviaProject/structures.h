@@ -14,7 +14,7 @@ struct RoomData
 {
 	unsigned int id;
 	string name;
-	string maxPlayers;
+	unsigned int maxPlayers;
 	unsigned int timePerQuestion;
 	unsigned int isActive;
 };
@@ -65,7 +65,6 @@ struct HighscoreResponse
 {
 	unsigned int status;
 	vector<HighscoreTable> Highscores;
-
 };
 
 struct JoinRoomResponse
@@ -94,7 +93,7 @@ struct GetRoomStateResponse
 	bool hasGameBegun;
 	vector<string> players;
 	unsigned int questionCount;
-	unsigned int answerTimeout; /////////////////////////////////
+	unsigned int answerTimeout; 
 };
 
 struct LeaveRoomResponse
@@ -147,8 +146,29 @@ struct SignupRequest
 	string password;
 	string email;
 };
+struct CreateRoomRequest
+{
+	string roomName;
+	unsigned int maxUsers;
+	unsigned int questionCount;
+	unsigned int answerTimeout;
+};
 
-		
+struct GetPlayersInRoomRequest
+{
+	unsigned int roomId;
+};
+
+struct JoinRoomRequest
+{
+	string username;
+	unsigned int roomId;
+};
+
+struct LogoutRequest
+{
+	string username;
+};
 	
 		/*MANAGERS*/
 struct GameData
