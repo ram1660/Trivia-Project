@@ -1,15 +1,37 @@
 #pragma once
-#include "sqlite_modern_cpp\sqlite3.h"
-#include "sqlite_modern_cpp.h"
-#include "LoggedUser.h"
+#include <iostream>
+#include <winsock2.h>
 #include <map>
+#include <string>
 #include <list>
-#include <vector>
-class IDatabase
+#include "sqlite3.h"
+#include <stdlib.h>
+#include <io.h>
+#include "User.h"
+#include "loggedUser.h"
+#include "Question.h"
+
+
+class IDataBase
 {
 public:
-	virtual std::map<LoggedUser, int> getHighscores() = 0;
-	virtual bool doesUserExists(std::string username) = 0;
-	virtual std::list<Question> getQuestion(int amount) = 0;
+	//std::list<Question> getQuestions (int);
+	//std::map<LoggedUser, int> getHighscores();
+
+	//user
+	bool doesUserExists(std::string username);
+	void createUser(User& user);
+	void deleteUser(LoggedUser& user);
+	bool DoesPasswordMatchUser(std::string username, std::string password);
+
+	//questions
+
+	bool open();
+	//void close();
+	void clear();
+
+private:
+
+	sqlite3 * db;
 };
 

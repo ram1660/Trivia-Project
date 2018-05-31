@@ -115,19 +115,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="IDatabase.cpp" />
     <ClCompile Include="JsoneResponsePacketSerializer.cpp" />
     <ClCompile Include="JsonRequestPacketDeserializer.cpp" />
+    <ClCompile Include="LoggedUser.cpp" />
+    <ClCompile Include="sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="HighScore.h" />
+    <ClInclude Include="IDatabase.h" />
     <ClInclude Include="IRequestHandler.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="JsoneResponsePacketSerializer.h" />
     <ClInclude Include="JsonRequestPacketDeserializer.h" />
+    <ClInclude Include="LoggedUser.h" />
     <ClInclude Include="Question.h" />
     <ClInclude Include="Room.h" />
+    <ClInclude Include="sqlite3.h" />
     <ClInclude Include="structures.h" />
+    <ClInclude Include="User.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

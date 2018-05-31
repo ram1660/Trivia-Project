@@ -1,22 +1,28 @@
 #include "JsoneResponsePacketSerializer.h"
-
-Buffer JsonResponsePacketSerializer::serializeResponse(ErrorResponse s)
+using nlohmann::json;
+std::vector<char> JasonResponsePacketSerializer::serializeResponse(ErrorResponse e)
 {
-	
-}
-
-Buffer JsonResponsePacketSerializer::serializeResponse(LoginResponse s)
-{
-	Buffer buffer;
-	json j = s.status;
-	//buffer.buffer = json::to_msgpack(s);
+	json j;
+	j["message"] = e.message;		
+	std::string str = j.dump();
+	std::vector<char> buffer(str.begin(), str.end());
 	return buffer;
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(SignupResponse s)
+std::vector<char> JasonResponsePacketSerializer::serializeResponse(LoginResponse l)
 {
-	Buffer buffer;
-	json j = s.status;
-	//buffer.buffer = json::to_msgpack(s);
+	json j;
+	j["status"] = l.status;
+	std::string str = j.dump();
+	std::vector<char> buffer(str.begin(), str.end());
+	return buffer;
+}
+
+std::vector<char> JasonResponsePacketSerializer::serializeResponse(SignupResponse s)
+{
+	json j;
+	j["status"] = s.status;
+	std::string str = j.dump();
+	std::vector<char> buffer(str.begin(), str.end());
 	return buffer;
 }

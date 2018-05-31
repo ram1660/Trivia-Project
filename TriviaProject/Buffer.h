@@ -2,5 +2,5 @@
 #include <vector>
 struct Buffer
 {
-	std::vector<unsigned char> buffer;
+	std::string buffer;
 };
