@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include "IDatabase.h"
+#include "SqliteDatabase.h"
 class IDatabase;
 class LoggedUser;
 class HighscoreTable : public IDatabase

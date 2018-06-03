@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "IDatabase.h"
+#include "SqliteDatabase.h"
 class LoggedUser;
 class IDatabase;
 class LoginManager

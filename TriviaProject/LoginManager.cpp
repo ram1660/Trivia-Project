@@ -1,6 +1,6 @@
 #include "LoginManager.h"
 
-LoginManager::LoginManager() : m_database(new IDatabase())
+LoginManager::LoginManager() : m_database(new SqliteDatabase())
 {
 }
 

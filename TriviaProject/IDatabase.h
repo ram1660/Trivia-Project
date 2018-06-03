@@ -17,22 +17,18 @@ class IDatabase
 public:
 	//std::list<Question> getQuestions (int);
 	//std::map<LoggedUser, int> getHighscores();
-	IDatabase();
-	~IDatabase();
+	
 	//user
-	bool doesUserExists(std::string username);
-	void createUser(std::string username, std::string password, std::string email);
-	void deleteUser(LoggedUser& user);
-	bool DoesPasswordMatchUser(std::string username, std::string password);
+	virtual bool doesUserExists(std::string username) = 0;
+	virtual void createUser(std::string username, std::string password, std::string email) = 0;
+	virtual void deleteUser(LoggedUser& user) = 0;
+	virtual bool DoesPasswordMatchUser(std::string username, std::string password) = 0;
 
 	//questions
 
-	bool open();
-	//void close();
-	void clear();
+	virtual bool open() = 0;
+	virtual void clear() = 0;
 
-private:
 
-	sqlite3 * db;
 };
 
