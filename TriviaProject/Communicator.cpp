@@ -39,7 +39,7 @@ void Communicator::handleRequests()
 {
 	Request currentReq;
 	unique_lock<mutex> requestsLocker(mRequests);
-	requestsLocker.unlock();
+	//requestsLocker.unlock();
 	while (true)
 	{
 		if (m_messageQ.empty())
