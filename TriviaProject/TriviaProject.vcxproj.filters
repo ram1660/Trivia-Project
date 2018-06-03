@@ -75,24 +75,15 @@
     <ClCompile Include="RoomMemberRequestHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sqlite_modern_cpp\errors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sqlite_modern_cpp\lists\error_codes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sqlite_modern_cpp\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sqlite_modern_cpp\utility\function_traits.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sqlite_modern_cpp\utility\uncaught_exceptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sqlite_modern_cpp\utility\utf16_utf8.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IRequestHandler.h">
@@ -165,6 +156,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="User.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
