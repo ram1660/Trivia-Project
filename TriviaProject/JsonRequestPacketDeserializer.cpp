@@ -1,29 +1,34 @@
 #include "JsonRequestPacketDeserializer.h"
-using namespace std;
-using nlohmann::json;
+#include "structures.h"
+#include "json.hpp"
 
+using json = nlohmann::json;
 
 LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(Buffer b)
 {
-	
-	LoginRequest lr;
-	json j = b.buffer;
-	lr.username = j["username"].get<std::string>();
-	lr.password = j["password"].get<std::string>();
+	json j = json::from_msgpack(b.buffer);
+	string userName = j["username"];
+	string password = j["password"];
+	LoginRequest login;
 
-	return lr;
-	
-	//return null;
+	login.username = userName;
+	login.password = password;
+
+	return login;
 }
 
 SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(Buffer b)
 {
-		SignupRequest sr;
-	json j = b.buffer;
-	sr.email = j["email"].get<std::string>();
-	sr.password = j["password"].get<std::string>();
-	sr.username = j["username"].get<std::string>();
-	return sr;
-	
-	//return Null;
+	json j = json::from_msgpack(b.buffer);
+	string userName = j["username"];
+	string password = j["password"];
+	string email = j["email"];
+
+	SignupRequest signup;
+
+	signup.username = userName;
+	signup.password = password;
+	signup.email = email;
+
+	return signup;
 }
