@@ -1,6 +1,6 @@
 #include <map>
 #include <algorithm>
-#include "IDataBase.h"
+#include "IDatabase.h"
 int callbackUser(void *data, int argc, char **argv, char **azColName);
 int callbackQuestion(void *data, int argc, char **argv, char **azColName);
 std::list<LoggedUser> m_users;
