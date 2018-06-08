@@ -7,7 +7,7 @@ using json = nlohmann::json;
 LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(Buffer b)
 {
 	std::string bufferInString{(b.buffer).begin(), (b.buffer).end()};
-	json j = json::from_msgpack(bufferInString);
+	json j = json::parse(bufferInString);
 	string userName = j["username"];
 	string password = j["password"];
 	LoginRequest login;
@@ -21,7 +21,7 @@ LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(Buffer b)
 SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(Buffer b)
 {
 	std::string bufferInString{ (b.buffer).begin(), (b.buffer).end() };
-	json j = json::from_msgpack(bufferInString);
+	json j = json::parse(bufferInString);
 	string userName = j["username"];
 	string password = j["password"];
 	string email = j["email"];

@@ -6,6 +6,8 @@
 #include <map>
 #include <thread>
 #include <mutex>
+#include <stdlib.h>
+#include <stdio.h>
 #include <deque>
 #include <condition_variable>
 #include "Buffer.h"
@@ -13,6 +15,7 @@
 #include "JsonRequestPacketDeserializer.h"
 #include "LoginRequestHandler.h"
 class IRequestHandler;
+class HighscoreTable;
 class RequestHandlerFactory;
 class Communicator
 {
@@ -28,7 +31,7 @@ private:
 	vector<char> getDataFromClient(SOCKET client, int size);
 	char* getPartFromSocket(SOCKET sc, int bytesNumber);
 	char* getPartFromSocket(SOCKET sc, int bytesNum, int flags);
-	vector<int> getInfoFromClient(SOCKET client);
+	Request getInfoFromClient(SOCKET client);
 	void sendData(SOCKET sc, Buffer message);
 	void clientHandler(SOCKET clientSocket);
 	std::map<SOCKET, IRequestHandler*> m_clients; // Shared resource
