@@ -59,7 +59,7 @@ void SqliteDatabase::createUser(std::string username, std::string password, std:
 	int res = sqlite3_exec(db, sqlStatement, callbackUser, nullptr, &errMessage);
 	if (res != SQLITE_OK)
 	{
-
+		std::cout << "Something is wrong!" << std::endl;
 	}
 }
 
@@ -75,7 +75,7 @@ void SqliteDatabase::deleteUser(LoggedUser& user)
 		int res = sqlite3_exec(db, sqlStatement, callbackUser, nullptr, &errMessage);
 		if (res != SQLITE_OK)
 		{
-
+			std::cout << "Something is wrong!" << std::endl;
 		}
 	}
 }
@@ -96,6 +96,7 @@ bool SqliteDatabase::doesUserExists(std::string username)
 	int res = sqlite3_exec(db, sqlStatement.c_str(), callbackUser, nullptr, &errMessage);
 	if (res != SQLITE_OK)
 	{
+		std::cout << "Something is wrong!" << std::endl;
 		return false;
 	} //Did it work?
 
@@ -110,6 +111,7 @@ bool SqliteDatabase::DoesPasswordMatchUser(std::string username, std::string pas
 	int res = sqlite3_exec(db, sqlStatement.c_str(), callbackUser, nullptr, &errMessage);
 	if (res != SQLITE_OK)
 	{
+		std::cout << "Something is wrong!" << std::endl;
 		return false;
 	} //Did it work?
 

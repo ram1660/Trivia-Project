@@ -3,7 +3,7 @@ mutex mRequests, mClients;
 condition_variable c;
 static const unsigned short PORT = 7080;
 static const unsigned int IFACE = 0;
-Communicator::Communicator()
+Communicator::Communicator() : m_handlerFactory(new LoginManager(), new RoomManager(), new HighscoreTable())
 {
 	_serverSocket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
@@ -15,7 +15,6 @@ Communicator::~Communicator()
 {
 	for (int i = 0; i < m_clients.size(); i++)
 		delete m_clients[i];
-
 	try
 	{
 		::closesocket(_serverSocket);
@@ -39,6 +38,7 @@ void Communicator::handleRequests()
 {
 	Request currentReq;
 	unique_lock<mutex> requestsLocker(mRequests);
+
 	//requestsLocker.unlock();
 	while (true)
 	{
@@ -64,7 +64,7 @@ void Communicator::handleRequests()
 			b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
 			sendData(client, b);
 		}
-		requestsLocker.lock();
+		//requestsLocker.lock();
 		m_messageQ.pop_front();
 		requestsLocker.unlock();
 	}
@@ -99,15 +99,7 @@ void Communicator::clientHandler(SOCKET clientSocket)
 	try
 	{
 		Request currRequest;
-		vector<int> info = getInfoFromClient(clientSocket);
-		int idRequest = info[0];
-		currRequest.id = idRequest;
-		int bufferLen = info[1];
-		char *bufferData = getPartFromSocket(clientSocket, bufferLen);
-		for (int i = 0; i < bufferLen; i++)
-		{
-			currRequest.buffer.push_back(bufferData[i]);
-		}
+		currRequest = getInfoFromClient(clientSocket);
 
 		unique_lock<mutex> requestsLocker(mRequests);
 		m_messageQ.push_back(make_pair(clientSocket, currRequest));
@@ -122,25 +114,39 @@ void Communicator::clientHandler(SOCKET clientSocket)
 
 void Communicator::sendData(SOCKET sc, Buffer message)
 {
-	string strMessage;
-	for (int i = 0; i < message.buffer.size(); i++)
-		strMessage[i] += message.buffer[i];
-	const char* data = strMessage.c_str();
-	int size = static_cast<int>(message.buffer.size());
-	if (send(sc, data, size, 0) == INVALID_SOCKET)
+	string strMessage{ (message.buffer).begin(), (message.buffer).end() };
+	vector<char> buff;
+	for (int i = 0; i < 4; i++)
+		buff.push_back(strMessage.length() >> ((3 - i) * 8));
+	for (int i = 0; i < strMessage.size(); i++)
+		buff.push_back(strMessage[i]);
+	char* n = new char[buff.size()];
+	for (int i = 0; i < buff.size(); i++)
+		n[i] = buff[i];
+	if (send(sc, n, buff.size(), 0) == INVALID_SOCKET)
 		throw std::exception("Error while sending message to client");
 }
 
 #pragma region Extracting data from client section
-vector<int> Communicator::getInfoFromClient(SOCKET client)
+Request Communicator::getInfoFromClient(SOCKET client)
 {
-	vector<int> info;
-	char* buffInfo = getPartFromSocket(client, 5);
-	int code = (int)buffInfo[0], size = 0;
-	for (int i = 1; i < 5; i++) size |= (unsigned char)buffInfo[i] << (24 - (i - 1) * 8);
-	info.push_back(code);
-	info.push_back(size);
-	return info;
+	Request request;
+	char* infoFromSocket = getPartFromSocket(client, 5);
+	int code = (int)infoFromSocket[0], size = 0;
+	for (int i = 1; i < 5; i++) size |= (unsigned char)infoFromSocket[i] << (24 - (i - 1) * 8);
+	request.id = code;
+	Buffer buff;
+	buff.buffer.push_back('{');
+	buff.buffer.push_back('\"');
+
+	char* data = new char[size];
+	data = getPartFromSocket(client, size);
+	for (int i = 0; i < size; i++) buff.buffer.push_back(data[i]);
+	buff.buffer.pop_back();
+	buff.buffer.pop_back();
+	delete[] data;
+	request.buffer = buff.buffer;
+	return request;
 }
 vector<char> Communicator::getDataFromClient(SOCKET client, int size)
 {
