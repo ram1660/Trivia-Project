@@ -2,10 +2,12 @@
 
 LoginManager::LoginManager() : m_database(new SqliteDatabase())
 {
+	m_database->open();
 }
 
 LoginManager::LoginManager(IDatabase & db) : m_database(&db)
 {
+	m_database->open();
 }
 
 

@@ -15,7 +15,6 @@ Communicator::~Communicator()
 {
 	for (int i = 0; i < m_clients.size(); i++)
 		delete m_clients[i];
-
 	try
 	{
 		::closesocket(_serverSocket);
@@ -113,11 +112,10 @@ void Communicator::clientHandler(SOCKET clientSocket)
 	}
 }
 
-void Communicator::sendData(SOCKET sc, Buffer message, int code)
+void Communicator::sendData(SOCKET sc, Buffer message)
 {
 	string strMessage{ (message.buffer).begin(), (message.buffer).end() };
 	vector<char> buff;
-	buff.push_back(code);
 	for (int i = 0; i < 4; i++)
 		buff.push_back(strMessage.length() >> ((3 - i) * 8));
 	for (int i = 0; i < strMessage.size(); i++)
