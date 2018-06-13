@@ -37,7 +37,7 @@ void Communicator::bindAndListen()
 void Communicator::handleRequests()
 {
 	Request currentReq;
-	unique_lock<mutex> requestsLocker(mRequests);
+	unique_lock<mutex> requestsLocker(mRequests, std::defer_lock);
 
 	//requestsLocker.unlock();
 	while (true)
@@ -98,17 +98,27 @@ void Communicator::clientHandler(SOCKET clientSocket)
 {
 	try
 	{
-		Request currRequest;
-		currRequest = getInfoFromClient(clientSocket);
-
-		unique_lock<mutex> requestsLocker(mRequests);
-		m_messageQ.push_back(make_pair(clientSocket, currRequest));
-		requestsLocker.unlock();
-		c.notify_all();
+		unique_lock<mutex> requestsLocker(mRequests, std::defer_lock);
+		while (true)
+		{
+			Request currRequest;
+			try
+			{
+				currRequest = getInfoFromClient(clientSocket);
+			}
+			catch (const std::exception& e)
+			{
+				std::cout << "Exception was catch in function clientHandler. socket=" << clientSocket << ", what=" << e.what() << std::endl;
+				break;
+			}
+			requestsLocker.lock();
+			m_messageQ.push_back(make_pair(clientSocket, currRequest));
+			requestsLocker.unlock();
+			c.notify_all();
+		}
 	}
 	catch (const std::exception& e)
 	{
-		std::cout << "Exception was catch in function clientHandler. socket=" << clientSocket << ", what=" << e.what() << std::endl;
 	}
 }
 
