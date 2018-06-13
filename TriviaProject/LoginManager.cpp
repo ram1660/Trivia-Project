@@ -23,10 +23,6 @@ bool LoginManager::signup(std::string username, std::string password, std::strin
 	m_database->createUser(username, password, email);
 	LoggedUser newUser(username);
 	m_loggedUsers.push_back(newUser);
-	// Some SQL queries.
-	// Checking if the user exists.
-	// If he doesn't exists then entering the info the database but not into LoggedUsers vector.
-	// If he exists don't do nothing.
 	return true;
 }
 

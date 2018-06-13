@@ -106,9 +106,9 @@ void Communicator::clientHandler(SOCKET clientSocket)
 		requestsLocker.unlock();
 		c.notify_all();
 	}
-	catch (const std::exception&)
+	catch (const std::exception& e)
 	{
-		closesocket(clientSocket);
+		std::cout << "Exception was catch in function clientHandler. socket=" << clientSocket << ", what=" << e.what() << std::endl;
 	}
 }
 

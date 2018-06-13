@@ -13,7 +13,8 @@ public:
 	void createUser(std::string username, std::string password, std::string email) override;
 	void deleteUser(LoggedUser& user) override;
 	bool DoesPasswordMatchUser(std::string username, std::string password) override;
-
+	static int callbackUser(void * data, int argc, char ** argv, char ** azColName);
+	static int doesUserExistsCallback(void * data, int argc, char ** argv, char ** azColName);
 	//questions
 
 	bool open() override;

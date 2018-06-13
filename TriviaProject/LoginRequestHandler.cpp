@@ -76,6 +76,7 @@ RequestResult LoginRequestHandler::signup(Request r)
 		Buffer b;
 		b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
 		result.newHandler = new LoginRequestHandler(m_loginManager, m_handlerFactory);
+		result.response = b;
 	}
 	return result;
 }
