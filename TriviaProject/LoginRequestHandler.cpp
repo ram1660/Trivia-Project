@@ -34,8 +34,13 @@ RequestResult LoginRequestHandler::login(Request r)
 	{
 		LoginResponse login;
 		login.status = RESPONSE_SIGNIN;
-		Buffer b;
-		b.buffer = JsonResponsePacketSerializer::serializeResponse(login);
+		Buffer finalBuffer;
+		vector<char> code, data;
+		code.push_back(RESPONSE_SIGNIN);
+		data = JsonResponsePacketSerializer::serializeResponse(login);
+		finalBuffer.buffer.reserve(code.size() + data.size());
+		finalBuffer.buffer.insert(finalBuffer.buffer.end(), code.begin(), code.end());
+		finalBuffer.buffer.insert(finalBuffer.buffer.end(), data.begin(), data.end());
 		result.response = b;
 		result.newHandler = m_handlerFactory->createMenuRequestHandler();
 	}
@@ -73,10 +78,15 @@ RequestResult LoginRequestHandler::signup(Request r)
 	{
 		SignupResponse response;
 		response.status = RESPONSE_SIGNUP;
-		Buffer b;
-		b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
+		Buffer finalBuffer;
+		vector<char> code, data;
+		code.push_back(RESPONSE_SIGNUP);
+		data = JsonResponsePacketSerializer::serializeResponse(response);
+		finalBuffer.buffer.reserve(code.size() + data.size());
+		finalBuffer.buffer.insert(finalBuffer.buffer.end(), code.begin(), code.end());
+		finalBuffer.buffer.insert(finalBuffer.buffer.end(), data.begin(), data.end());
 		result.newHandler = new LoginRequestHandler(m_loginManager, m_handlerFactory);
-		result.response = b;
+		result.response = finalBuffer;
 	}
 	return result;
 }

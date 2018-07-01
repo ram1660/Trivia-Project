@@ -1,6 +1,8 @@
 #include "Communicator.h"
-mutex mRequests, mClients;
-condition_variable c;
+mutex mClients;
+recursive_mutex mRequests;
+condition_variable cClients;
+condition_variable_any cRequests;
 static const unsigned short PORT = 7080;
 static const unsigned int IFACE = 0;
 Communicator::Communicator() : m_handlerFactory(new LoginManager(), new RoomManager(), new HighscoreTable())
@@ -37,39 +39,93 @@ void Communicator::bindAndListen()
 void Communicator::handleRequests()
 {
 	Request currentReq;
-	unique_lock<mutex> requestsLocker(mRequests, std::defer_lock);
-
-	//requestsLocker.unlock();
+	unique_lock<recursive_mutex> requestsLocker1(mRequests);
 	while (true)
 	{
 		if (m_messageQ.empty())
-			c.wait(requestsLocker);
+			cRequests.wait(requestsLocker1);
+		if (m_messageQ.front().second.id != RESPONSE_KEEP_ALIVE)
+		{
+			IRequestHandler* rq = m_clients.at(m_messageQ.front().first);
+			currentReq = m_messageQ.front().second;
 
-		IRequestHandler* rq = m_clients.at(m_messageQ.front().first);
-		currentReq = m_messageQ.front().second;
-		SOCKET client = m_messageQ.front().first;
-		if (rq->isRequestRelevant(currentReq))
-		{
-			RequestResult result = rq->handleRequest(currentReq);
-			if (result.newHandler != nullptr)
-				rq = result.newHandler;
-			sendData(client, result.response);
+			SOCKET client = m_messageQ.front().first;
+			if (rq->isRequestRelevant(currentReq))
+			{
+				RequestResult result = rq->handleRequest(currentReq);
+				if (result.newHandler != nullptr)
+					rq = result.newHandler;
+				sendData(client, result.response);
+			}
+			else
+			{
+				ErrorResponse response;
+				response.message = RESPONSE_ERROR;
+				Buffer b;
+				b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
+				sendData(client, b);
+			}
+			//requestsLocker1.try_lock();
+			m_messageQ.pop_front();
 		}
-		else
-		{
-			ErrorResponse response;
-			// Inform a new protocol.
-			response.message = RESPONSE_ERROR;
-			Buffer b;
-			b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
-			sendData(client, b);
-		}
-		//requestsLocker.lock();
-		m_messageQ.pop_front();
-		requestsLocker.unlock();
+		//requestsLocker1.unlock();
 	}
 }
 
+void Communicator::keepAlive()
+{
+	KeepAliveRequest keepRequest;
+	Request request;
+	map<SOCKET, IRequestHandler*>::iterator it;
+	map<SOCKET, Request> keepAliveMap;
+	bool firstMessageHasSent = false;
+	while (true)
+	{
+		for (it = m_clients.begin(); it != m_clients.end(); it++)
+		{
+			keepRequest.code = REQUEST_KEEP_ALIVE;
+			Buffer data;
+			vector<char> jsonRequest = JsonResponsePacketSerializer::serializeResponse(keepRequest);
+			data.buffer.push_back(REQUEST_KEEP_ALIVE);
+			data.buffer.insert(data.buffer.end(), jsonRequest.begin(), jsonRequest.end());
+			firstMessageHasSent = true;
+			cout << "Sending keep alive request to " << it->first << endl;
+			sendData(it->first, data);
+		}
+		this_thread::sleep_for(chrono::seconds(15));
+
+		for (size_t i = 0; i < m_messageQ.size(); i++)
+			if (m_messageQ[i].second.id == RESPONSE_KEEP_ALIVE)
+			{
+				keepAliveMap.insert(pair<SOCKET, Request>(m_messageQ[i].first, m_messageQ[i].second));
+				m_messageQ.erase(m_messageQ.begin() + i);
+			}
+		for (it = m_clients.begin(); it != m_clients.end(); it++)
+		{
+			for (size_t i = 0; i < keepAliveMap.size(); i++)
+			{
+				if (!keepAliveMap.count(it->first))
+				{
+					m_clients.erase(m_clients.find((m_messageQ.begin() + i)->first));
+					cout << "A client lost connection with: " << it->first <<"!" << endl;
+				}
+				else
+					cout << "The client " << it->first << " is still alive!" << endl;
+			}
+		}
+		/*if (keepAliveMap.empty() && !m_clients.empty())
+		{
+			m_clients.erase(m_clients.find((m_messageQ.begin())->first));
+			cout << "The client " << (m_messageQ.begin())->first << " lost connections!" << endl;
+		}*/
+		if (firstMessageHasSent && m_clients.size() == 1 && keepAliveMap.size() == 0)
+		{
+			cout << "A client lost connection with: " << m_clients.begin()->first << "!" << endl;
+			m_clients.erase(m_clients.begin());
+		}
+		keepAliveMap.clear();
+	}
+}
 void Communicator::startThreadForNewClient()
 {
 	SOCKET client_socket = ::accept(_serverSocket, NULL, NULL);
@@ -87,6 +143,9 @@ void Communicator::serve()
 {
 	bindAndListen();
 	std::thread tr(&Communicator::handleRequests, this);
+	std::thread keepAliveThread(&Communicator::keepAlive, this);
+	keepAliveThread.detach();
+	tr.detach();
 	while (true)
 	{
 		std::cout << "Waiting for client connection request" << std::endl;
@@ -98,7 +157,7 @@ void Communicator::clientHandler(SOCKET clientSocket)
 {
 	try
 	{
-		unique_lock<mutex> requestsLocker(mRequests, std::defer_lock);
+		//;
 		while (true)
 		{
 			Request currRequest;
@@ -111,21 +170,29 @@ void Communicator::clientHandler(SOCKET clientSocket)
 				std::cout << "Exception was catch in function clientHandler. socket=" << clientSocket << ", what=" << e.what() << std::endl;
 				break;
 			}
-			requestsLocker.lock();
-			m_messageQ.push_back(make_pair(clientSocket, currRequest));
-			requestsLocker.unlock();
-			c.notify_all();
+			{
+				//unique_lock<recursive_mutex> requestsLocker2(mRequests, std::defer_lock);
+				//requestsLocker2.lock();
+					m_messageQ.push_back(make_pair(clientSocket, currRequest));
+				//requestsLocker2.unlock();
+			}
+			//requestsLocker2.lock();
+			if(currRequest.id != RESPONSE_KEEP_ALIVE)
+				cRequests.notify_all();
 		}
 	}
 	catch (const std::exception& e)
 	{
+		cout << "Something went wrong! " << e.what() << endl;
 	}
 }
 
 void Communicator::sendData(SOCKET sc, Buffer message)
 {
-	string strMessage{ (message.buffer).begin(), (message.buffer).end() };
 	vector<char> buff;
+	buff.push_back(message.buffer[0]);
+	message.buffer.erase(message.buffer.begin());
+	string strMessage{ (message.buffer).begin(), (message.buffer).end() };
 	for (int i = 0; i < 4; i++)
 		buff.push_back(strMessage.length() >> ((3 - i) * 8));
 	for (int i = 0; i < strMessage.size(); i++)

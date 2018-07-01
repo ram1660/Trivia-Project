@@ -133,6 +133,10 @@ struct ErrorResponse
 	std::string message;
 };
 
+struct KeepAliveResponse
+{
+	int code;
+};
 
 		/*REQUEST*/
 struct LoginRequest
@@ -168,6 +172,11 @@ struct JoinRoomRequest
 struct LogoutRequest
 {
 	string username;
+};
+
+struct KeepAliveRequest
+{
+	unsigned int code;
 };
 	
 		/*MANAGERS*/

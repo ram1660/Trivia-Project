@@ -37,7 +37,7 @@ Room RoomManager::getSpecificRoom(int id)
 	RoomData data;
 	data.id = INVALID_ROOM_ID;
 	Room room(data);
-	for (size_t i = 0; i < m_rooms.size(); i++)
+	for (int i = 0; i < m_rooms.size(); i++)
 		if (m_rooms[i].getMetaRoom().id == id)
 			return m_rooms[i];
 	return room;

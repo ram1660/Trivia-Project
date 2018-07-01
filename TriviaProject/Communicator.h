@@ -27,6 +27,7 @@ public:
 	~Communicator();
 
 private:
+	void keepAlive(); // Making sure that the server has connections to all the clients.
 	void startThreadForNewClient();
 	vector<char> getDataFromClient(SOCKET client, int size);
 	char* getPartFromSocket(SOCKET sc, int bytesNumber);

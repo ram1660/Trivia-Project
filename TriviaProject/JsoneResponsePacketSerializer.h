@@ -9,4 +9,5 @@ public:
 	static std::vector<char> serializeResponse(ErrorResponse);
 	static std::vector<char> serializeResponse(LoginResponse);
 	static std::vector<char> serializeResponse(SignupResponse);
+	static std::vector<char> serializeResponse(KeepAliveRequest);
 };

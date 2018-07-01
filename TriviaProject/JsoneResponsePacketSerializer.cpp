@@ -26,3 +26,12 @@ std::vector<char> JsonResponsePacketSerializer::serializeResponse(SignupResponse
 	std::vector<char> buffer(str.begin(), str.end());
 	return buffer;
 }
+
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(KeepAliveRequest k)
+{
+	json j;
+	j["code"] = k.code;
+	std::string str = j.dump();
+	std::vector<char> buffer(str.begin(), str.end());
+	return buffer;
+}
