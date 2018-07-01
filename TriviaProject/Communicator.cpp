@@ -55,7 +55,14 @@ void Communicator::handleRequests()
 				RequestResult result = rq->handleRequest(currentReq);
 				if (result.newHandler != nullptr)
 					rq = result.newHandler;
-				sendData(client, result.response);
+				try
+				{
+					sendData(client, result.response);
+				}
+				catch (const std::exception& e)
+				{
+					cout << "What=" << e.what() << endl;
+				}
 			}
 			else
 			{
@@ -63,7 +70,15 @@ void Communicator::handleRequests()
 				response.message = RESPONSE_ERROR;
 				Buffer b;
 				b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
-				sendData(client, b);
+				try
+				{
+					sendData(client, b);
+
+				}
+				catch (const std::exception& e)
+				{
+					cout << "What=" << e.what() << endl;
+				}
 			}
 			//requestsLocker1.try_lock();
 			m_messageQ.pop_front();
@@ -76,12 +91,13 @@ void Communicator::keepAlive()
 {
 	KeepAliveRequest keepRequest;
 	Request request;
-	map<SOCKET, IRequestHandler*>::iterator it;
-	map<SOCKET, Request> keepAliveMap;
+	map<SOCKET, IRequestHandler*>::iterator itMap;
+	map<SOCKET, Request> keepAliveDeque;
+	//deque<pair<SOCKET, Request>>::iterator itDeque;
 	bool firstMessageHasSent = false;
 	while (true)
 	{
-		for (it = m_clients.begin(); it != m_clients.end(); it++)
+		for (itMap = m_clients.begin(); itMap != m_clients.end(); itMap++)
 		{
 			keepRequest.code = REQUEST_KEEP_ALIVE;
 			Buffer data;
@@ -89,41 +105,47 @@ void Communicator::keepAlive()
 			data.buffer.push_back(REQUEST_KEEP_ALIVE);
 			data.buffer.insert(data.buffer.end(), jsonRequest.begin(), jsonRequest.end());
 			firstMessageHasSent = true;
-			cout << "Sending keep alive request to " << it->first << endl;
-			sendData(it->first, data);
+			cout << "Sending keep alive request to " << itMap->first << endl;
+			try
+			{
+				sendData(itMap->first, data);
+			}
+			catch (const std::exception& e)
+			{
+				cout << "What=" << e.what() << endl;
+			}
 		}
 		this_thread::sleep_for(chrono::seconds(15));
 
 		for (size_t i = 0; i < m_messageQ.size(); i++)
 			if (m_messageQ[i].second.id == RESPONSE_KEEP_ALIVE)
 			{
-				keepAliveMap.insert(pair<SOCKET, Request>(m_messageQ[i].first, m_messageQ[i].second));
+				keepAliveDeque.insert(make_pair(m_messageQ[i].first, m_messageQ[i].second));
 				m_messageQ.erase(m_messageQ.begin() + i);
 			}
-		for (it = m_clients.begin(); it != m_clients.end(); it++)
+		if (!m_clients.empty())
 		{
-			for (size_t i = 0; i < keepAliveMap.size(); i++)
+			for (itMap = m_clients.begin(); itMap != m_clients.end(); itMap++)
 			{
-				if (!keepAliveMap.count(it->first))
+				for (size_t i = 0; i < keepAliveDeque.size(); i++)
 				{
-					m_clients.erase(m_clients.find((m_messageQ.begin() + i)->first));
-					cout << "A client lost connection with: " << it->first <<"!" << endl;
+					if (keepAliveDeque.find(itMap->first) != keepAliveDeque.end())
+					{
+						cout << "A client lost connection with: " << keepAliveDeque.find(itMap->first)->first << "!" << endl;
+						m_clients.erase(m_clients.find((keepAliveDeque.find(itMap->first))->first));
+					}
+					else
+						cout << "The client " << itMap->first << " is still alive!" << endl;
 				}
-				else
-					cout << "The client " << it->first << " is still alive!" << endl;
+			}
+			if (firstMessageHasSent && m_clients.size() == 1 && keepAliveDeque.size() == 0)
+			{
+				cout << "A client lost connection with: " << m_clients.begin()->first << "!" << endl;
+				m_clients.erase(m_clients.begin());
+				firstMessageHasSent = false;
 			}
 		}
-		/*if (keepAliveMap.empty() && !m_clients.empty())
-		{
-			m_clients.erase(m_clients.find((m_messageQ.begin())->first));
-			cout << "The client " << (m_messageQ.begin())->first << " lost connections!" << endl;
-		}*/
-		if (firstMessageHasSent && m_clients.size() == 1 && keepAliveMap.size() == 0)
-		{
-			cout << "A client lost connection with: " << m_clients.begin()->first << "!" << endl;
-			m_clients.erase(m_clients.begin());
-		}
-		keepAliveMap.clear();
+		keepAliveDeque.clear();
 	}
 }
 void Communicator::startThreadForNewClient()
@@ -132,9 +154,10 @@ void Communicator::startThreadForNewClient()
 	cout << "New client has been conected!" << endl;
 	if (client_socket == INVALID_SOCKET)
 		throw std::exception(__FUNCTION__);
-	unique_lock<mutex> usersLocker(mClients);
-	m_clients.insert(pair<SOCKET, IRequestHandler*>(client_socket, m_handlerFactory.createLoginRequestHandler()));
-	usersLocker.unlock();
+	{
+		lock_guard<mutex> usersLocker(mClients);
+		m_clients.insert(pair<SOCKET, IRequestHandler*>(client_socket, m_handlerFactory.createLoginRequestHandler()));
+	}
 	std::thread t(&Communicator::clientHandler, this, client_socket);
 	t.detach();
 }
@@ -221,7 +244,7 @@ Request Communicator::getInfoFromClient(SOCKET client)
 	for (int i = 0; i < size; i++) buff.buffer.push_back(data[i]);
 	buff.buffer.pop_back();
 	buff.buffer.pop_back();
-	delete[] data;
+	//delete[] data;
 	request.buffer = buff.buffer;
 	return request;
 }

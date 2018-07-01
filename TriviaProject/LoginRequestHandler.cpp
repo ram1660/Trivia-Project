@@ -48,9 +48,14 @@ RequestResult LoginRequestHandler::login(Request r)
 	{
 		ErrorResponse error;
 		error.message = "ERROR: This user doesn't exists!";
-		Buffer b;
-		b.buffer = JsonResponsePacketSerializer::serializeResponse(error);
-		result.response = b;
+		Buffer finalBuffer;
+		vector<char> code, data;
+		code.push_back(RESPONSE_ERROR);
+		data = JsonResponsePacketSerializer::serializeResponse(error);
+		finalBuffer.buffer.reserve(code.size() + data.size());
+		finalBuffer.buffer.insert(finalBuffer.buffer.end(), code.begin(), code.end());
+		finalBuffer.buffer.insert(finalBuffer.buffer.end(), data.begin(), data.end());
+		result.response = finalBuffer;
 		result.newHandler = nullptr;
 	}
 	return result;
@@ -69,9 +74,15 @@ RequestResult LoginRequestHandler::signup(Request r)
 	{
 		ErrorResponse error;
 		error.message = "ERROR: This user already exists!";
-		Buffer b;
-		b.buffer = JsonResponsePacketSerializer::serializeResponse(error);
-		result.response = b;
+		Buffer finalBuffer;
+		vector<char> code, data;
+		code.push_back(RESPONSE_ERROR);
+		data = JsonResponsePacketSerializer::serializeResponse(error);
+		finalBuffer.buffer.reserve(code.size() + data.size());
+		finalBuffer.buffer.insert(finalBuffer.buffer.end(), code.begin(), code.end());
+		finalBuffer.buffer.insert(finalBuffer.buffer.end(), data.begin(), data.end());
+		//finalBuffer.buffer = JsonResponsePacketSerializer::serializeResponse(error);
+		result.response = finalBuffer;
 		result.newHandler = nullptr;
 	}
 	else
@@ -85,8 +96,8 @@ RequestResult LoginRequestHandler::signup(Request r)
 		finalBuffer.buffer.reserve(code.size() + data.size());
 		finalBuffer.buffer.insert(finalBuffer.buffer.end(), code.begin(), code.end());
 		finalBuffer.buffer.insert(finalBuffer.buffer.end(), data.begin(), data.end());
-		result.newHandler = new LoginRequestHandler(m_loginManager, m_handlerFactory);
 		result.response = finalBuffer;
+		result.newHandler = new LoginRequestHandler(m_loginManager, m_handlerFactory);
 	}
 	return result;
 }
