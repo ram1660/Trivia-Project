@@ -22,4 +22,5 @@ private:
 	RequestHandlerFactory* m_handlerFactory;
 	RequestResult login(Request r);
 	RequestResult signup(Request r);
+	RequestResult signout(Request r);
 };

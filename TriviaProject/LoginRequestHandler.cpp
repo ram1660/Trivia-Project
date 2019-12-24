@@ -18,8 +18,10 @@ RequestResult LoginRequestHandler::handleRequest(Request r)
 	b.buffer = r.buffer;
 	if (r.id == REQUEST_SIGNIN)
 		return login(r);
-	else
+	else if (r.id == REQUEST_SIGNUP)
 		return signup(r);
+	else
+		return signout(r);
 }
 
 RequestResult LoginRequestHandler::login(Request r)
@@ -41,7 +43,7 @@ RequestResult LoginRequestHandler::login(Request r)
 		finalBuffer.buffer.reserve(code.size() + data.size());
 		finalBuffer.buffer.insert(finalBuffer.buffer.end(), code.begin(), code.end());
 		finalBuffer.buffer.insert(finalBuffer.buffer.end(), data.begin(), data.end());
-		result.response = b;
+		result.response = finalBuffer;
 		result.newHandler = m_handlerFactory->createMenuRequestHandler();
 	}
 	else
@@ -81,7 +83,6 @@ RequestResult LoginRequestHandler::signup(Request r)
 		finalBuffer.buffer.reserve(code.size() + data.size());
 		finalBuffer.buffer.insert(finalBuffer.buffer.end(), code.begin(), code.end());
 		finalBuffer.buffer.insert(finalBuffer.buffer.end(), data.begin(), data.end());
-		//finalBuffer.buffer = JsonResponsePacketSerializer::serializeResponse(error);
 		result.response = finalBuffer;
 		result.newHandler = nullptr;
 	}
@@ -102,9 +103,30 @@ RequestResult LoginRequestHandler::signup(Request r)
 	return result;
 }
 
+RequestResult LoginRequestHandler::signout(Request r)
+{
+	Buffer b, finalBuffer;
+	b.buffer = r.buffer;
+	vector<char> code, data;
+	SignoutRequest request = JsonRequestPacketDeserializer::deserializeSignoutRequest(b);
+	RequestResult result;
+	GeneralResponse response;
+	response.code = GENERAL_RESPONSE;
+	b.buffer = r.buffer;
+	m_loginManager->logout(request.username);
+	code.push_back(GENERAL_RESPONSE);
+	data = JsonResponsePacketSerializer::serializeResponse(response);
+	finalBuffer.buffer.reserve(code.size() + data.size());
+	finalBuffer.buffer.insert(finalBuffer.buffer.end(), code.begin(), code.end());
+	finalBuffer.buffer.insert(finalBuffer.buffer.end(), data.begin(), data.end());
+	result.response = finalBuffer;
+
+	return result;
+}
+
 bool LoginRequestHandler::isRequestRelevant(Request r)
 {
-	if (r.id == REQUEST_SIGNUP || r.id == REQUEST_SIGNIN)
+	if (r.id == REQUEST_SIGNUP || r.id == REQUEST_SIGNIN || r.id == REQUEST_SIGNOUT)
 		return true;
 	return false;
 }

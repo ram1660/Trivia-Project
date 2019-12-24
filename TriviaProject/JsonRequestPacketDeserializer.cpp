@@ -1,8 +1,4 @@
 #include "JsonRequestPacketDeserializer.h"
-#include "structures.h"
-#include "json.hpp"
-
-using json = nlohmann::json;
 
 LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(Buffer b)
 {
@@ -33,4 +29,14 @@ SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(Buffer b)
 	signup.email = email;
 
 	return signup;
+}
+
+SignoutRequest JsonRequestPacketDeserializer::deserializeSignoutRequest(Buffer b)
+{
+	std::string bufferInString{ (b.buffer).begin(), (b.buffer).end() };
+	json j = json::parse(bufferInString);
+	string username = j["username"];
+	SignoutRequest signout;
+	signout.username = username;
+	return signout;
 }

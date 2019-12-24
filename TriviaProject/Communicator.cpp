@@ -83,6 +83,11 @@ void Communicator::handleRequests()
 			//requestsLocker1.try_lock();
 			m_messageQ.pop_front();
 		}
+		else
+		{
+			m_keepAliveMap.insert(m_messageQ.front());
+			m_messageQ.pop_front();
+		}
 		//requestsLocker1.unlock();
 	}
 }
@@ -92,7 +97,8 @@ void Communicator::keepAlive()
 	KeepAliveRequest keepRequest;
 	Request request;
 	map<SOCKET, IRequestHandler*>::iterator itMap;
-	map<SOCKET, Request> keepAliveDeque;
+	//map<SOCKET, Request> keepAliveDeque;
+	bool isClientsEmpty = false;
 	//deque<pair<SOCKET, Request>>::iterator itDeque;
 	bool firstMessageHasSent = false;
 	while (true)
@@ -120,32 +126,37 @@ void Communicator::keepAlive()
 		for (size_t i = 0; i < m_messageQ.size(); i++)
 			if (m_messageQ[i].second.id == RESPONSE_KEEP_ALIVE)
 			{
-				keepAliveDeque.insert(make_pair(m_messageQ[i].first, m_messageQ[i].second));
+				m_keepAliveMap.insert(make_pair(m_messageQ[i].first, m_messageQ[i].second));
 				m_messageQ.erase(m_messageQ.begin() + i);
 			}
 		if (!m_clients.empty())
 		{
 			for (itMap = m_clients.begin(); itMap != m_clients.end(); itMap++)
 			{
-				for (size_t i = 0; i < keepAliveDeque.size(); i++)
+				for (size_t i = 0; i < m_keepAliveMap.size(); i++)
 				{
-					if (keepAliveDeque.find(itMap->first) != keepAliveDeque.end())
+					if (m_keepAliveMap.find(itMap->first) == m_keepAliveMap.end())
 					{
-						cout << "A client lost connection with: " << keepAliveDeque.find(itMap->first)->first << "!" << endl;
-						m_clients.erase(m_clients.find((keepAliveDeque.find(itMap->first))->first));
+						cout << "A client lost connection with: " << m_keepAliveMap.find(itMap->first)->first << "!" << endl;
+						m_clients.erase(m_clients.find((m_keepAliveMap.find(itMap->first))->first));
+						if (m_clients.size() == 0)
+							isClientsEmpty = true;
 					}
 					else
 						cout << "The client " << itMap->first << " is still alive!" << endl;
 				}
+				if (isClientsEmpty)
+					break;
 			}
-			if (firstMessageHasSent && m_clients.size() == 1 && keepAliveDeque.size() == 0)
+			isClientsEmpty = false;
+			if (firstMessageHasSent && m_clients.size() == 1 && m_keepAliveMap.size() == 0)
 			{
 				cout << "A client lost connection with: " << m_clients.begin()->first << "!" << endl;
 				m_clients.erase(m_clients.begin());
 				firstMessageHasSent = false;
 			}
 		}
-		keepAliveDeque.clear();
+		m_keepAliveMap.clear();
 	}
 }
 void Communicator::startThreadForNewClient()
@@ -186,7 +197,10 @@ void Communicator::clientHandler(SOCKET clientSocket)
 			Request currRequest;
 			try
 			{
-				currRequest = getInfoFromClient(clientSocket);
+				if (m_clients.find(clientSocket) != m_clients.end())
+					currRequest = getInfoFromClient(clientSocket);
+				else
+					break;
 			}
 			catch (const std::exception& e)
 			{

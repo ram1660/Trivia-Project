@@ -169,12 +169,17 @@ struct JoinRoomRequest
 	unsigned int roomId;
 };
 
-struct LogoutRequest
+struct SignoutRequest
 {
 	string username;
 };
 
 struct KeepAliveRequest
+{
+	unsigned int code;
+};
+
+struct GeneralResponse
 {
 	unsigned int code;
 };

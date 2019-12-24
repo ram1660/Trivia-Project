@@ -35,3 +35,12 @@ std::vector<char> JsonResponsePacketSerializer::serializeResponse(KeepAliveReque
 	std::vector<char> buffer(str.begin(), str.end());
 	return buffer;
 }
+
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(GeneralResponse generalResponse)
+{
+	json j;
+	j["code"] = generalResponse.code;
+	std::string str = j.dump();
+	std::vector<char> buffer(str.begin(), str.end());
+	return buffer;
+}

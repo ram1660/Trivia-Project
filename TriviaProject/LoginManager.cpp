@@ -34,10 +34,6 @@ bool LoginManager::login(std::string username, std::string password)
 		m_loggedUsers.push_back(user);
 		return true;
 	}
-	// Some SQL queries.
-	// Checking if the user exists.
-	// If he is inserting him to LoggedUsers vector.
-	// Else don't insert
 	return false;
 }
 

@@ -3,7 +3,6 @@
 class SqliteDatabase : public IDatabase
 {
 public:
-public:
 	//std::list<Question> getQuestions (int);
 	//std::map<LoggedUser, int> getHighscores();
 	SqliteDatabase();
@@ -13,7 +12,6 @@ public:
 	void createUser(std::string username, std::string password, std::string email) override;
 	void deleteUser(LoggedUser& user) override;
 	bool DoesPasswordMatchUser(std::string username, std::string password) override;
-	static int callbackUser(void * data, int argc, char ** argv, char ** azColName);
 	static int doesUserExistsCallback(void * data, int argc, char ** argv, char ** azColName);
 	//questions
 
@@ -22,6 +20,11 @@ public:
 	void clear() override;
 
 private:
+	// Callbacks
+	int callbackUser(void* data, int argc, char** argv, char** azColName);
+	int callbackQuestion(void* data, int argc, char** argv, char** azColName);
+	//int callbackUser(void* data, int argc, char** argv, char** azColName);
+
 
 	sqlite3 * db;
 };

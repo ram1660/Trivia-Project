@@ -9,4 +9,5 @@ class JsonRequestPacketDeserializer
 public:
 	static LoginRequest deserializeLoginRequest(Buffer b);
 	static SignupRequest deserializeSignupRequest(Buffer b);
+	static SignoutRequest deserializeSignoutRequest(Buffer b);
 };

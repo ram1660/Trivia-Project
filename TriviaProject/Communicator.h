@@ -39,4 +39,5 @@ private:
 	RequestHandlerFactory m_handlerFactory;
 	SOCKET _serverSocket;
 	std::deque<std::pair<SOCKET, Request>> m_messageQ; // Shared resource
+	std::map<SOCKET, Request> m_keepAliveMap;
 };

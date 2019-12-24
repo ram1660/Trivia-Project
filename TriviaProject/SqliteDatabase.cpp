@@ -1,8 +1,7 @@
 #include <map>
 #include <algorithm>
 #include "SqliteDatabase.h"
-int callbackUser(void *data, int argc, char **argv, char **azColName);
-int callbackQuestion(void *data, int argc, char **argv, char **azColName);
+
 std::list<LoggedUser> m_users;
 std::list<Question> m_question;
 
@@ -143,17 +142,27 @@ int SqliteDatabase::callbackUser(void * data, int argc, char ** argv, char ** az
 
 }
 
+int SqliteDatabase::callbackQuestion(void* data, int argc, char** argv, char** azColName)
+{
+	return 0;
+}
+
 int SqliteDatabase::doesUserExistsCallback(void * data, int argc, char ** argv, char ** azColName)
 {
 	bool* isExists = (bool*)data;
-	if (argv[0] == "0")
-	{
-		*isExists = false;
-	}
-	else if (argv[0] == "1")
+	if (!strcmp(argv[0], "1"))
 	{
 		*isExists = true;
 	}
+	else if (strcmp(argv[0], "0"))
+	{
+		*isExists = false;
+	}
+	return 0;
+}
+
+int callbackUser(void* data, int argc, char** argv, char** azColName)
+{
 	return 0;
 }
 
