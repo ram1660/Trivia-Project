@@ -5,7 +5,7 @@
 #include <string>
 #include <list>
 #include <io.h>
-#include <stdlib.h>
+
 #include "LoggedUser.h"
 #include "sqlite3.h"
 

@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include "structures.h"
 #include <string>
 #include "json.hpp"
@@ -11,4 +10,10 @@ public:
 	static std::vector<char> serializeResponse(SignupResponse);
 	static std::vector<char> serializeResponse(KeepAliveRequest);
 	static std::vector<char> serializeResponse(GeneralResponse);
+	//static std::vector<char> serializeResponse(LogoutResponse);
+	static std::vector<char> serializeResponse(GetRoomsResponse);
+	static std::vector<char> serializeResponse(GetPlayersInRoomResponse);
+	static std::vector<char> serializeResponse(JoinRoomResponse);
+	static std::vector<char> serializeResponse(CreateRoomResponse);
+	static std::vector<char> serializeResponse(HighscoreResponse);
 };

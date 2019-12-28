@@ -1,10 +1,4 @@
-#include <map>
-#include <algorithm>
 #include "SqliteDatabase.h"
-
-std::list<LoggedUser> m_users;
-std::list<Question> m_question;
-
 bool SqliteDatabase::open()
 {
 	std::string dbFileName = "MyDB.sqlite";
@@ -73,7 +67,7 @@ void SqliteDatabase::deleteUser(LoggedUser& user)
 	if (doesUserExists(user.getUsername()))
 	{
 
-		std::string sql = "DELETE FROM USER WHERE NAME LIKE '" + user.getUsername() + "';";
+		std::string sql = "DELETE FROM USER WHERE USERNAME LIKE '" + user.getUsername() + "';";
 		const char* sqlStatement = sql.c_str();
 		char *errMessage = nullptr;
 		int res = sqlite3_exec(db, sqlStatement, nullptr, nullptr, &errMessage);
@@ -142,11 +136,6 @@ int SqliteDatabase::callbackUser(void * data, int argc, char ** argv, char ** az
 
 }
 
-int SqliteDatabase::callbackQuestion(void* data, int argc, char** argv, char** azColName)
-{
-	return 0;
-}
-
 int SqliteDatabase::doesUserExistsCallback(void * data, int argc, char ** argv, char ** azColName)
 {
 	bool* isExists = (bool*)data;
@@ -161,12 +150,7 @@ int SqliteDatabase::doesUserExistsCallback(void * data, int argc, char ** argv, 
 	return 0;
 }
 
-int callbackUser(void* data, int argc, char** argv, char** azColName)
-{
-	return 0;
-}
-
-int callbackQuestion(void *data, int argc, char **argv, char **azColName)
+int SqliteDatabase::callbackQuestion(void *data, int argc, char **argv, char **azColName)
 {
 	std::string question;
 	std::string correct_ans;

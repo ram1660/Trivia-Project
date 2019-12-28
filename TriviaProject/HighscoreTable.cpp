@@ -2,7 +2,7 @@
 
 
 
-HighscoreTable::HighscoreTable()
+HighscoreTable::HighscoreTable() : m_database(nullptr)
 {
 }
 

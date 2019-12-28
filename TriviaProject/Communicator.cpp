@@ -191,7 +191,6 @@ void Communicator::clientHandler(SOCKET clientSocket)
 {
 	try
 	{
-		//;
 		while (true)
 		{
 			Request currRequest;
@@ -258,7 +257,7 @@ Request Communicator::getInfoFromClient(SOCKET client)
 	for (int i = 0; i < size; i++) buff.buffer.push_back(data[i]);
 	buff.buffer.pop_back();
 	buff.buffer.pop_back();
-	//delete[] data;
+	delete[] data;
 	request.buffer = buff.buffer;
 	return request;
 }

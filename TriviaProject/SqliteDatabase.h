@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include "IDatabase.h"
 class SqliteDatabase : public IDatabase
 {
@@ -20,6 +21,9 @@ public:
 	void clear() override;
 
 private:
+	std::list<LoggedUser> m_users;
+	std::list<Question> m_question;
+
 	// Callbacks
 	int callbackUser(void* data, int argc, char** argv, char** azColName);
 	int callbackQuestion(void* data, int argc, char** argv, char** azColName);

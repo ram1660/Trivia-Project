@@ -40,3 +40,43 @@ SignoutRequest JsonRequestPacketDeserializer::deserializeSignoutRequest(Buffer b
 	signout.username = username;
 	return signout;
 }
+
+GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersRequest(Buffer b)
+{
+	std::string bufferInString{ (b.buffer).begin(), (b.buffer).end() };
+	json j = json::parse(bufferInString);
+	GetPlayersInRoomRequest request;
+	string roomId = j["roomId"];
+	request.roomId = atoi(roomId.c_str());
+	return request;
+}
+
+JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer b)
+{
+	std::string bufferInString{ (b.buffer).begin(), (b.buffer).end() };
+	json j = json::parse(bufferInString);
+	JoinRoomRequest request;
+	string username = j["username"];
+	string roomId = j["roomId"];
+	request.username = username;
+	request.roomId = atoi(roomId.c_str());
+	return request;
+}
+
+CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Buffer b)
+{
+	std::string bufferInString{ (b.buffer).begin(), (b.buffer).end() };
+	json j = json::parse(bufferInString);
+	CreateRoomRequest request;
+	string username = j["username"];
+	string roomName = j["roomName"];
+	string maxUsers = j["maxUsers"];
+	string questionCount = j["questionCount"];
+	string answerTimeout = j["answerTimeout"];
+	request.roomName = roomName;
+	request.maxUsers = atoi(maxUsers.c_str());
+	request.questionCount = atoi(questionCount.c_str());
+	request.answerTimeout = atoi(answerTimeout.c_str());
+	request.username = username;
+	return request;
+}

@@ -1,10 +1,13 @@
 #pragma once
 #include <iostream>
 #include <map>
-#include <vector>
 #include <bitset>
 #include <cstddef>
 #include "Buffer.h"
+
+#define ROOM_STATUS_WAITING 0
+#define ROOM_STATUS_IN_A_PROGRESS 1
+#define DEFAULT_QUESTION_COUNT 10
 class HighscoreTable;
 class IRequestHandler;
 class Question;
@@ -12,11 +15,12 @@ using namespace std;
 
 struct RoomData
 {
-	unsigned int id;
 	string name;
-	unsigned int maxPlayers;
-	unsigned int timePerQuestion;
-	unsigned int isActive;
+	unsigned int id = 0;
+	unsigned int maxPlayers = 0;
+	unsigned int timePerQuestion = 0;
+	unsigned int isActive = 0;
+	unsigned int questionCount = 0;
 };
 
 
@@ -29,7 +33,7 @@ struct RequestResult
 
 struct Request
 {
-	unsigned int id;
+	unsigned int id = 0;
 	time_t receivalTime;
 	vector<char> buffer;
 };
@@ -37,22 +41,22 @@ struct Request
 		/*RESPONSE*/
 struct LoginResponse
 {
-	unsigned int status;
+	unsigned int status = 0;
 };
 
 struct SignupResponse
 {
-	unsigned int status;
+	unsigned int status = 0;
 };
 
 struct LogoutResponse
 {
-	unsigned int status;
+	unsigned int status = 0;
 };
 
-struct getRoomsResponse
+struct GetRoomsResponse
 {
-	unsigned int status;
+	unsigned int status = 0;
 	vector<RoomData*> rooms;
 };
 
@@ -63,13 +67,13 @@ struct GetPlayersInRoomResponse
 
 struct HighscoreResponse
 {
-	unsigned int status;
-	vector<HighscoreTable> Highscores;
+	unsigned int status = 0;
+	//vector<HighscoreTable> highscores;
 };
 
 struct JoinRoomResponse
 {
-	unsigned int status;
+	unsigned int status = 0;
 };
 
 struct CreateRoomResponse
@@ -152,6 +156,7 @@ struct SignupRequest
 };
 struct CreateRoomRequest
 {
+	string username;
 	string roomName;
 	unsigned int maxUsers;
 	unsigned int questionCount;

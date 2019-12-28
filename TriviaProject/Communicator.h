@@ -2,7 +2,6 @@
 #include <iostream>
 #pragma comment(lib, "ws2_32.lib")
 #include <WinSock2.h>
-#include <Windows.h>
 #include <map>
 #include <thread>
 #include <mutex>

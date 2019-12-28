@@ -8,7 +8,7 @@ LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 
 MenuRequestHandler* RequestHandlerFactory::createMenuRequestHandler()
 {
-	MenuRequestHandler* menu = new MenuRequestHandler();
+	MenuRequestHandler* menu = new MenuRequestHandler(m_loginManager, m_roomManager, m_highscoreTable, this);
 	return menu;
 }
 

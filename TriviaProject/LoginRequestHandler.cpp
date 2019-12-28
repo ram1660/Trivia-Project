@@ -1,5 +1,5 @@
 #include "LoginRequestHandler.h"
-LoginRequestHandler::LoginRequestHandler()
+LoginRequestHandler::LoginRequestHandler() : m_loginManager(new LoginManager()), m_handlerFactory(new RequestHandlerFactory())
 {
 }
 LoginRequestHandler::LoginRequestHandler(LoginManager* manager, RequestHandlerFactory* factory) : m_loginManager(manager), m_handlerFactory(factory)
@@ -18,10 +18,8 @@ RequestResult LoginRequestHandler::handleRequest(Request r)
 	b.buffer = r.buffer;
 	if (r.id == REQUEST_SIGNIN)
 		return login(r);
-	else if (r.id == REQUEST_SIGNUP)
-		return signup(r);
 	else
-		return signout(r);
+		return signup(r);
 }
 
 RequestResult LoginRequestHandler::login(Request r)
@@ -103,30 +101,10 @@ RequestResult LoginRequestHandler::signup(Request r)
 	return result;
 }
 
-RequestResult LoginRequestHandler::signout(Request r)
-{
-	Buffer b, finalBuffer;
-	b.buffer = r.buffer;
-	vector<char> code, data;
-	SignoutRequest request = JsonRequestPacketDeserializer::deserializeSignoutRequest(b);
-	RequestResult result;
-	GeneralResponse response;
-	response.code = GENERAL_RESPONSE;
-	b.buffer = r.buffer;
-	m_loginManager->logout(request.username);
-	code.push_back(GENERAL_RESPONSE);
-	data = JsonResponsePacketSerializer::serializeResponse(response);
-	finalBuffer.buffer.reserve(code.size() + data.size());
-	finalBuffer.buffer.insert(finalBuffer.buffer.end(), code.begin(), code.end());
-	finalBuffer.buffer.insert(finalBuffer.buffer.end(), data.begin(), data.end());
-	result.response = finalBuffer;
-
-	return result;
-}
 
 bool LoginRequestHandler::isRequestRelevant(Request r)
 {
-	if (r.id == REQUEST_SIGNUP || r.id == REQUEST_SIGNIN || r.id == REQUEST_SIGNOUT)
+	if (r.id == REQUEST_SIGNUP || r.id == REQUEST_SIGNIN)
 		return true;
 	return false;
 }

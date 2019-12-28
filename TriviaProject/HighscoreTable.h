@@ -1,5 +1,4 @@
 #pragma once
-#include <map>
 #include "SqliteDatabase.h"
 class IDatabase;
 class LoggedUser;
