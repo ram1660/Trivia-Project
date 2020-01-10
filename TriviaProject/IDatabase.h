@@ -23,7 +23,7 @@ public:
 	virtual void createUser(std::string username, std::string password, std::string email) = 0;
 	virtual void deleteUser(LoggedUser& user) = 0;
 	virtual bool DoesPasswordMatchUser(std::string username, std::string password) = 0;
-
+	virtual sqlite3* getDatabase() = 0;
 	//questions
 
 	virtual bool open() = 0;

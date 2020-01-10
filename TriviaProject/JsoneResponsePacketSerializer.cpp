@@ -1,5 +1,31 @@
 #include "JsoneResponsePacketSerializer.h"
-using nlohmann::json;
+
+namespace ns
+{
+	typedef struct RoomData
+	{
+		unsigned int id;
+		std::string name;
+		unsigned int maxPlayers;
+		unsigned int questionCount;
+		unsigned int timePerQuestion;
+		unsigned int isActive;
+	} RoomData;
+
+	
+
+	void to_json(nlohmann::json& j, const ns::RoomData& val)
+	{
+		j["id"] = val.id;
+		j["name"] = val.name;
+		j["maxPlayers"] = val.maxPlayers;
+		j["questionCount"] = val.questionCount;
+		j["timePerQuestion"] = val.timePerQuestion;
+		j["isActive"] = val.isActive;
+	}
+
+}
+
 std::vector<char> JsonResponsePacketSerializer::serializeResponse(ErrorResponse e)
 {
 	json j;
@@ -53,14 +79,14 @@ std::vector<char> JsonResponsePacketSerializer::serializeResponse(GeneralRespons
 std::vector<char> JsonResponsePacketSerializer::serializeResponse(GetRoomsResponse getRoomsResponse)
 {
 	json j;
+	vector<ns::RoomData> newRooms;
+	for (RoomData* room : getRoomsResponse.rooms)
+	{
+		newRooms.push_back(ns::RoomData{ room->id, room->name, room->maxPlayers, room->questionCount, room->timePerQuestion, room->isActive });
+		delete room;
+	}
 	j["status"] = getRoomsResponse.status;
-	j["rooms"] = (getRoomsResponse.rooms);
-	j["id"] = getRoomsResponse.rooms.id;
-	j["name"] = getRoomsResponse.rooms.name;
-	j["maxPlayers"] = getRoomsResponse.rooms.maxPlayers;
-	j["questionCount"] = getRoomsResponse.rooms.questionCount;
-	j["timePerQuestion"] = getRoomsResponse.rooms.timePerQuestion;
-	j["isActive"] = getRoomsResponse.rooms.isActive;
+	j["rooms"] = newRooms;
 	string str = j.dump();
 	vector<char> buffer(str.begin(), str.end());
 	return buffer;
@@ -97,7 +123,7 @@ std::vector<char> JsonResponsePacketSerializer::serializeResponse(HighscoreRespo
 {
 	json j;
 	j["status"] = highscoreResponse.status;
-	//j["highscores"] = highscoreResponse.highscores;
+	j["highscores"] = highscoreResponse.highscores;
 	string str = j.dump();
 	vector<char> buffer(str.begin(), str.end());
 	return buffer;

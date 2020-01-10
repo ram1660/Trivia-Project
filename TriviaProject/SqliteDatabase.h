@@ -19,7 +19,7 @@ public:
 	bool open() override;
 	//void close();
 	void clear() override;
-
+	sqlite3* getDatabase() override;
 private:
 	std::list<LoggedUser> m_users;
 	std::list<Question> m_question;

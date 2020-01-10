@@ -2,24 +2,17 @@
 #include "SqliteDatabase.h"
 class IDatabase;
 class LoggedUser;
-class HighscoreTable : public IDatabase
+class HighscoreTable
 {
 public:
 	HighscoreTable();
 	HighscoreTable(IDatabase * db);
 	~HighscoreTable();
-	std::map<LoggedUser, int> getHighscores();
-	bool doesUserExists(std::string username) override;
-	void createUser(std::string username, std::string password, std::string email) override;
-	void deleteUser(LoggedUser& user) override;
-	bool DoesPasswordMatchUser(std::string username, std::string password) override;
+	std::map<std::string, unsigned int> getHighscores();
 
-	//questions
-
-	bool open() override;
-	void clear() override;
 
 private:
+	static int callbackHighscores(void* data, int argc, char** argv, char** azColName);
 	IDatabase * m_database;
 };
 

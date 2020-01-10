@@ -114,7 +114,14 @@ RequestResult MenuRequestHandler::getPlayersInRoom(Request r)
 
 RequestResult MenuRequestHandler::getHighscores(Request r)
 {
-	return RequestResult();
+	RequestResult result;
+	Buffer buff;
+	HighscoreResponse response;
+	response.highscores = m_highscoreTable->getHighscores();
+	response.status = RESPONSE_GET_HIGHSCORE;
+	buff.buffer = JsonResponsePacketSerializer::serializeResponse(response);
+	result.response = buff;
+	return result;
 }
 
 RequestResult MenuRequestHandler::joinRoom(Request r)
@@ -124,9 +131,17 @@ RequestResult MenuRequestHandler::joinRoom(Request r)
 	buff.buffer = r.buffer;
 	JoinRoomRequest roomRequest = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(buff);
 	RoomData dataRoom;
+	bool isFound = false;
 	dataRoom.id = roomRequest.roomId;
-	vector<RoomData>::iterator it = find(m_roomManager->getRooms().begin(), m_roomManager->getRooms().end(), dataRoom);
-	if (it == m_roomManager->getRooms().end())
+	for(RoomData room : m_roomManager->getRooms())
+	{
+		if (dataRoom.id == room.id)
+		{
+			isFound = true;
+			dataRoom = room;
+		}
+	}
+	if (!isFound)
 	{
 		ErrorResponse error;
 		error.message = "ERROR: This room doesn't exists!";
@@ -135,7 +150,7 @@ RequestResult MenuRequestHandler::joinRoom(Request r)
 		result.response = b;
 		result.newHandler = nullptr;
 	}
-	else if (it != m_roomManager->getRooms().end())
+	else
 	{
 		if (find(m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().begin(), m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().end(), LoggedUser(roomRequest.username)) == m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().end())
 		{

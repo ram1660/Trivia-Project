@@ -11,6 +11,7 @@
 class HighscoreTable;
 class IRequestHandler;
 class Question;
+class LoggedUser;
 using namespace std;
 
 struct RoomData
@@ -68,7 +69,7 @@ struct GetPlayersInRoomResponse
 struct HighscoreResponse
 {
 	unsigned int status = 0;
-	//vector<HighscoreTable> highscores;
+	map<string, unsigned int> highscores;
 };
 
 struct JoinRoomResponse
@@ -78,17 +79,17 @@ struct JoinRoomResponse
 
 struct CreateRoomResponse
 {
-	unsigned int status;
+	unsigned int status = 0;
 };
 
 struct CloseRoomResponse
 {
-	unsigned int status;
+	unsigned int status = 0;
 };
 
 struct StartRoomResponse
 {
-	unsigned int status;
+	unsigned int status = 0;
 };
 
 struct GetRoomStateResponse

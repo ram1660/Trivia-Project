@@ -1,5 +1,4 @@
 #include "RoomManager.h"
-#define INVALID_ROOM_ID 9999
 
 
 RoomManager::RoomManager()

@@ -18,6 +18,7 @@ bool SqliteDatabase::open()
 		const char* sqlUsers = "CREATE TABLE 'USER' ('USERNAME' TEXT NOT NULL UNIQUE, PASSWORD TEXT NOT NULL, MAIL TEXT NOT NULL, PRIMARY KEY('USERNAME'));";
 		const char* sqlQuestions = "CREATE TABLE 'QUESTION' ('QUESTION_ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 'QUESTION' TEXT NOT NULL UNIQUE, 'CORRECT_ANS' TEXT NOT NULL, 'ANS1' TEXT NOT NULL, 'ANS2' TEXT NOT NULL, 'ANS3' TEXT NOT NULL, 'ANS4' TEXT NOT NULL);";
 		const char* sqlGame = "CREATE TABLE 'GAME' ('GAME_ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 'STATUS' INTEGER NOT NULL, 'START_TIME' TEXT, 'END_TIME' TEXT);";
+		const char* sqlHighscores = "CREATE TABLE 'HIGHSCORES' ('USER'	TEXT NOT NULL UNIQUE, 'SCORE'	INTEGER NOT NULL, PRIMARY KEY('USER'));";
 		char** errMessage = nullptr;
 		res = sqlite3_exec(db, sqlUsers, nullptr, nullptr, errMessage);
 		if (res != SQLITE_OK)
@@ -37,6 +38,12 @@ bool SqliteDatabase::open()
 			std::cout << "Could not create the game table!";
 			return false;
 		}
+		res = sqlite3_exec(db, sqlHighscores, nullptr, nullptr, errMessage);
+		if (res != SQLITE_OK)
+		{
+			std::cout << "Could not create the highscores table!";
+			return false;
+		}
 	}
 	return true;
 }
@@ -44,6 +51,11 @@ bool SqliteDatabase::open()
 void SqliteDatabase::clear()
 {
 	m_users.clear();
+}
+
+sqlite3* SqliteDatabase::getDatabase()
+{
+	return db;
 }
 
 // ******************* User ******************* 
@@ -78,7 +90,7 @@ void SqliteDatabase::deleteUser(LoggedUser& user)
 	}
 }
 
-SqliteDatabase::SqliteDatabase()
+SqliteDatabase::SqliteDatabase() : db(nullptr)
 {
 }
 

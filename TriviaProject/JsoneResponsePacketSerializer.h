@@ -2,6 +2,8 @@
 #include "structures.h"
 #include <string>
 #include "json.hpp"
+using nlohmann::json;
+
 class JsonResponsePacketSerializer
 {
 public:
