@@ -12,7 +12,13 @@ namespace ns
 		unsigned int isActive;
 	} RoomData;
 
-	
+	typedef struct PlayerResults
+	{
+		std::string username;
+		unsigned int correctAnswerCount;
+		unsigned int wrongAnswerCount;
+		unsigned int averageAnswerTime;
+	}PlayerResults;
 
 	void to_json(nlohmann::json& j, const ns::RoomData& val)
 	{
@@ -23,7 +29,13 @@ namespace ns
 		j["timePerQuestion"] = val.timePerQuestion;
 		j["isActive"] = val.isActive;
 	}
-
+	void to_json(nlohmann::json& j, const ns::PlayerResults& val)
+	{
+		j["username"] = val.username;
+		j["correctAnswerCount"] = val.correctAnswerCount;
+		j["wrongAnswerCount"] = val.wrongAnswerCount;
+		j["averageAnswerTime"] = val.averageAnswerTime;
+	}
 }
 
 std::vector<char> JsonResponsePacketSerializer::serializeResponse(ErrorResponse e)
@@ -164,6 +176,40 @@ std::vector<char> JsonResponsePacketSerializer::serializeResponse(LeaveRoomRespo
 {
 	json j;
 	j["status"] = leaveRoomResponse.status;
+	string str = j.dump();
+	vector<char> buffer(str.begin(), str.end());
+	return buffer;
+}
+
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(GetQuestionResponse getQuestionResponse)
+{
+	json j;
+	j["status"] = getQuestionResponse.status;
+	j["question"] = getQuestionResponse.question;
+	j["answers"] = getQuestionResponse.answers; // Fix?
+	string str = j.dump();
+	vector<char> buffer(str.begin(), str.end());
+	return buffer;
+}
+
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(SubmitAnswerResponse submitAnswerResponse)
+{
+	json j;
+	j["status"] = submitAnswerResponse.status;
+	j["correctAnswer"] = submitAnswerResponse.correctAnswer;
+	string str = j.dump();
+	vector<char> buffer(str.begin(), str.end());
+	return buffer;
+}
+
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(GetGameResultsResponse getGameResultsResponse)
+{
+	json j;
+	vector<ns::PlayerResults> newResults;
+	j["status"] = getGameResultsResponse.status;
+	for (PlayerResults result : getGameResultsResponse.results)
+		newResults.push_back(ns::PlayerResults{ result.username, result.correctAnswerCount, result.wrongAnswerCount, result.averageAnswerTime });
+	j["playersResults"] = newResults;
 	string str = j.dump();
 	vector<char> buffer(str.begin(), str.end());
 	return buffer;

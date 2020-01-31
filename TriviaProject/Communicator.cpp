@@ -73,7 +73,6 @@ void Communicator::handleRequests()
 				try
 				{
 					sendData(client, b);
-
 				}
 				catch (const std::exception& e)
 				{

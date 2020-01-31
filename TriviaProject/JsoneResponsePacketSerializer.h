@@ -22,4 +22,7 @@ public:
 	static std::vector<char> serializeResponse(StartRoomResponse);
 	static std::vector<char> serializeResponse(GetRoomStateResponse);
 	static std::vector<char> serializeResponse(LeaveRoomResponse);
+	static std::vector<char> serializeResponse(GetQuestionResponse);
+	static std::vector<char> serializeResponse(SubmitAnswerResponse);
+	static std::vector<char> serializeResponse(GetGameResultsResponse);
 };

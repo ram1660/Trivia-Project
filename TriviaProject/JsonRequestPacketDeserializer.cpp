@@ -80,3 +80,13 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Bu
 	request.username = username;
 	return request;
 }
+
+SubmitAnswerRequest JsonRequestPacketDeserializer::deserializeSubmitAnswerRequest(Buffer b)
+{
+	std::string bufferInString{ (b.buffer).begin(), (b.buffer).end() };
+	json j = json::parse(bufferInString);
+	SubmitAnswerRequest request;
+	std::string answerId = j["answerId"];
+	request.answerId = std::atoi(answerId.c_str());
+	return request;
+}

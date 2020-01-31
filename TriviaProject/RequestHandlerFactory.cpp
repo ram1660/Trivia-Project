@@ -24,14 +24,21 @@ RoomMemberRequestHandler * RequestHandlerFactory::createRoomMemberRequestHandler
 	return roomMember;
 }
 
+GameRequestHandler* RequestHandlerFactory::createGameRequestHandler()
+{
+	GameManager* gameManager = new GameManager();
+	return gameManager;
+}
+
 RequestHandlerFactory::~RequestHandlerFactory()
 {
 	delete m_loginManager;
 	delete m_highscoreTable;
 	delete m_roomManager;
+	delete m_gameManager;
 }
 
-RequestHandlerFactory::RequestHandlerFactory() : m_loginManager(nullptr), m_highscoreTable(nullptr), m_roomManager(nullptr)
+RequestHandlerFactory::RequestHandlerFactory() : m_loginManager(nullptr), m_highscoreTable(nullptr), m_roomManager(nullptr), m_gameManager(nullptr)
 {
 }
 

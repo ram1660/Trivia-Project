@@ -3,8 +3,8 @@
 #include <map>
 #include <bitset>
 #include <cstddef>
+#include "Question.h"
 #include "Buffer.h"
-
 #define ROOM_STATUS_WAITING 0
 #define ROOM_STATUS_IN_A_PROGRESS 1
 #define DEFAULT_QUESTION_COUNT 10
@@ -24,6 +24,13 @@ struct RoomData
 	unsigned int questionCount = 0;
 };
 
+struct GameData
+{
+	Question currectQuestion;
+	unsigned int correctAnswerCount;
+	unsigned int wrongAnswerCount;
+	unsigned int averageAnswerTime;
+};
 
 		/*HANDLERS*/
 struct RequestResult
@@ -106,33 +113,6 @@ struct LeaveRoomResponse
 	unsigned int status;
 }; 
 
-struct GetQuestionResponse
-{
-	unsigned int status;
-	string question;
-	map<unsigned int, string> anwers;
-};
-
-struct SubmitAnswerResponse
-{
-	unsigned int status;
-	unsigned int correctAnswerId;
-};
-
-struct PlayerResults
-{
-	string username;
-	unsigned int correctAnswerCount;
-	unsigned int wrongAnswerCount;
-	unsigned int averageAnswerTime;
-};
-
-struct GetGameResultResponse
-{
-	unsigned int status;
-	vector<PlayerResults*> results;
-};
-
 struct ErrorResponse
 {
 	std::string message;
@@ -143,6 +123,32 @@ struct KeepAliveResponse
 	int code;
 };
 
+struct GetQuestionResponse
+{
+	unsigned int status;
+	std::string question;
+	std::map<unsigned int, std::string> answers;
+};
+
+struct SubmitAnswerResponse
+{
+	unsigned int status;
+	unsigned int correctAnswer;
+};
+
+struct GetGameResultsResponse
+{
+	unsigned int status;
+	std::vector<PlayerResults> results;
+};
+
+struct PlayerResults
+{
+	std::string username;
+	unsigned int correctAnswerCount;
+	unsigned int wrongAnswerCount;
+	unsigned int averageAnswerTime;
+};
 		/*REQUEST*/
 struct LoginRequest
 {
@@ -190,6 +196,11 @@ struct GeneralResponse
 	unsigned int code;
 };
 	
+struct SubmitAnswerRequest
+{
+	unsigned int answerId;
+};
+
 		/*MANAGERS*/
 struct GameData
 {

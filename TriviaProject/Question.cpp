@@ -4,7 +4,7 @@ Question::Question(std::string question, std::string correctAnswer, std::string 
 {
 }
 
-std::string Question::getQuestion()
+std::string Question::getQuestion() const
 {
 	return m_question;
 }
@@ -19,7 +19,7 @@ std::vector<std::string> Question::getPossibleAnswers()
 	return possibleAnswers;
 }
 
-std::string Question::getCorrectAnswer()
+std::string Question::getCorrectAnswer() const
 {
 	return m_correctAnswer;
 }

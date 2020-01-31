@@ -116,6 +116,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Communicator.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="GameRequestHandler.cpp" />
     <ClCompile Include="HighscoreTable.cpp" />
     <ClCompile Include="IRequestHandler.cpp" />
     <ClCompile Include="JsoneResponsePacketSerializer.cpp" />
@@ -139,6 +142,9 @@
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Communicator.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GameRequestHandler.h" />
     <ClInclude Include="HighscoreTable.h" />
     <ClInclude Include="IDatabase.h" />
     <ClInclude Include="IRequestHandler.h" />
