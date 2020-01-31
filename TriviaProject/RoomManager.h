@@ -13,7 +13,7 @@ public:
 	void createRoom(LoggedUser user, CreateRoomRequest roomInfo); // Possibly an admin?
 	void deleteRoom(unsigned int roomId);
 	unsigned int getRoomState(int ID) const; // Not clear what that's mean.
-	vector<RoomData> getRooms(); // What is that mean RoomMetadata?
+	vector<RoomData*> getRooms(); // What is that mean RoomMetadata?
 	Room getSpecificRoom(int id);
 	Room getUserRoom(string user);
 private:

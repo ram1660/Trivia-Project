@@ -22,7 +22,7 @@ void RoomManager::createRoom(LoggedUser user, CreateRoomRequest roomInfo)
 			data.name = roomInfo.roomName;
 			data.timePerQuestion = roomInfo.answerTimeout;
 			data.questionCount = roomInfo.questionCount;
-			Room room(data);
+			Room room(&data);
 			m_rooms.insert({ i, room });
 		}
 }
@@ -34,7 +34,7 @@ void RoomManager::deleteRoom(unsigned int roomId)
 
 unsigned int RoomManager::getRoomState(int ID) const
 {
-	unsigned int state = m_rooms.at(ID).getMetaRoom().isActive;
+	unsigned int state = m_rooms.at(ID).getMetaRoom()->isActive;
 	return state;
 }
 
@@ -43,9 +43,9 @@ Room RoomManager::getSpecificRoom(int id)
 {
 	RoomData data;
 	data.id = INVALID_ROOM;
-	Room room(data);
+	Room room(&data);
 	for (int i = 0; i < m_rooms.size(); i++)
-		if (m_rooms[i].getMetaRoom().id == id)
+		if (m_rooms[i].getMetaRoom()->id == id)
 			return m_rooms[i];
 	return room;
 }
@@ -64,9 +64,9 @@ bool RoomManager::isRoomExists(unsigned int id)
 	return (m_rooms.find(id) == m_rooms.end()) ? false : true;
 }
 
-std::vector<RoomData> RoomManager::getRooms()
+std::vector<RoomData*> RoomManager::getRooms()
 {
-	vector<RoomData> roomsData;
+	vector<RoomData*> roomsData;
 	for (auto room : m_rooms)
 		roomsData.push_back(room.second.getMetaRoom());
 	return roomsData;

@@ -128,3 +128,43 @@ std::vector<char> JsonResponsePacketSerializer::serializeResponse(HighscoreRespo
 	vector<char> buffer(str.begin(), str.end());
 	return buffer;
 }
+
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(CloseRoomResponse closeRoomResponse)
+{
+	json j;
+	j["status"] = closeRoomResponse.status;
+	string str = j.dump();
+	vector<char> buffer(str.begin(), str.end());
+	return buffer;
+}
+
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(StartRoomResponse startRoomResponse)
+{
+	json j;
+	j["status"] = startRoomResponse.status;
+	string str = j.dump();
+	vector<char> buffer(str.begin(), str.end());
+	return buffer;
+}
+
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(GetRoomStateResponse getRoomStateResponse)
+{
+	json j;
+	j["status"] = getRoomStateResponse.status;
+	j["hasGameBegun"] = getRoomStateResponse.hasGameBegun;
+	j["players"] = getRoomStateResponse.players;
+	j["questionCount"] = getRoomStateResponse.questionCount;
+	j["answerTimeout"] = getRoomStateResponse.answerTimeout;
+	string str = j.dump();
+	vector<char> buffer(str.begin(), str.end());
+	return buffer;
+}
+
+std::vector<char> JsonResponsePacketSerializer::serializeResponse(LeaveRoomResponse leaveRoomResponse)
+{
+	json j;
+	j["status"] = leaveRoomResponse.status;
+	string str = j.dump();
+	vector<char> buffer(str.begin(), str.end());
+	return buffer;
+}

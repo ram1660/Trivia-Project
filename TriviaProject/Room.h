@@ -7,16 +7,16 @@ class Room
 {
 public:
 	Room();
-	Room(RoomData data);
+	Room(RoomData* data);
 
 	~Room();
 	void addUser(string username);
 	void removeUser(string usnername);
 	vector<LoggedUser> getAllUsers() const;
-	RoomData getMetaRoom() const;
-	bool operator ==(Room const &other);
+	RoomData* getMetaRoom() const;
+	bool operator ==(Room &other);
 private:
-	RoomData m_metadata;
+	RoomData* m_metadata;
 	vector<LoggedUser> m_users;
 };
 

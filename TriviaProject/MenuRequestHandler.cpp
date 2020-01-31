@@ -48,7 +48,7 @@ RequestResult MenuRequestHandler::getRooms(Request r)
 	GetRoomsResponse response;
 	vector<RoomData*> roomsData;
 	for (auto room : m_roomManager->getRooms())
-		roomsData.push_back(&room);
+		roomsData.push_back(room);
 	response.status = RESPONSE_GET_ROOMS;
 	response.rooms = roomsData;
 	buffer.buffer = JsonResponsePacketSerializer::serializeResponse(response);
@@ -86,11 +86,11 @@ RequestResult MenuRequestHandler::getPlayersInRoom(Request r)
 	GetPlayersInRoomRequest roomRequest = JsonRequestPacketDeserializer::deserializeGetPlayersRequest(buff);
 	Room room;
 	for (auto roomData : m_roomManager->getRooms())
-		if (roomData.id == roomRequest.roomId)
-			room = m_roomManager->getSpecificRoom(roomData.id);
-	if (room.getMetaRoom().id != INVALID_ROOM)
+		if (roomData->id == roomRequest.roomId)
+			room = m_roomManager->getSpecificRoom(roomData->id);
+	if (room.getMetaRoom()->id != INVALID_ROOM)
 	{
-		Room requestedRoom = m_roomManager->getSpecificRoom(room.getMetaRoom().id);
+		Room requestedRoom = m_roomManager->getSpecificRoom(room.getMetaRoom()->id);
 		GetPlayersInRoomResponse response;
 		vector<LoggedUser> vec = requestedRoom.getAllUsers();
 		for (int i = 0; i < vec.size(); i++)
@@ -133,12 +133,12 @@ RequestResult MenuRequestHandler::joinRoom(Request r)
 	RoomData dataRoom;
 	bool isFound = false;
 	dataRoom.id = roomRequest.roomId;
-	for(RoomData room : m_roomManager->getRooms())
+	for(RoomData* room : m_roomManager->getRooms())
 	{
-		if (dataRoom.id == room.id)
+		if (dataRoom.id == room->id)
 		{
 			isFound = true;
-			dataRoom = room;
+			dataRoom = *room;
 		}
 	}
 	if (!isFound)

@@ -18,4 +18,8 @@ public:
 	static std::vector<char> serializeResponse(JoinRoomResponse);
 	static std::vector<char> serializeResponse(CreateRoomResponse);
 	static std::vector<char> serializeResponse(HighscoreResponse);
+	static std::vector<char> serializeResponse(CloseRoomResponse);
+	static std::vector<char> serializeResponse(StartRoomResponse);
+	static std::vector<char> serializeResponse(GetRoomStateResponse);
+	static std::vector<char> serializeResponse(LeaveRoomResponse);
 };

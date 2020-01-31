@@ -1,10 +1,11 @@
 #include "Room.h"
 
-Room::Room() 
+Room::Room()
 {
+	m_metadata = new RoomData();
 }
 
-Room::Room(RoomData data) : m_metadata(data)
+Room::Room(RoomData* data) : m_metadata(data)
 {
 }
 
@@ -15,7 +16,7 @@ Room::~Room()
 void Room::addUser(string username)
 {
 	// Check if the room is full?
-	if (m_users.size() == m_metadata.maxPlayers)
+	if (m_users.size() == m_metadata->maxPlayers)
 		cout << "The room is full!" << endl;
 	else
 	{
@@ -35,14 +36,14 @@ vector<LoggedUser> Room::getAllUsers() const
 	return m_users;
 }
 
-RoomData Room::getMetaRoom() const
+RoomData* Room::getMetaRoom() const
 {
 	return m_metadata;
 }
 
-bool Room::operator==(Room const & other)
+bool Room::operator==(Room & other)
 {
-	return (this->getMetaRoom().id == other.getMetaRoom().id);
+	return (this->getMetaRoom()->id == other.getMetaRoom()->id);
 }
 
 
