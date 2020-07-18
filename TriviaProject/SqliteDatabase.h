@@ -1,6 +1,9 @@
 #pragma once
 #include <algorithm>
+#include <sys/stat.h>
+#include <string.h>
 #include "IDatabase.h"
+#include <sqlite3.h>
 class SqliteDatabase : public IDatabase
 {
 public:
@@ -21,6 +24,7 @@ public:
 	void clear() override;
 	sqlite3* getDatabase() override;
 private:
+	inline bool doesFileExists (const std::string& name);
 	std::list<LoggedUser> m_users;
 	std::list<Question> m_question;
 

@@ -2,7 +2,6 @@
 
 #include <locale>
 #include <string>
-#include <algorithm>
 
 #include "../errors.h"
 
@@ -11,8 +10,8 @@ namespace sqlite {
 		inline std::string utf16_to_utf8(const std::u16string &input) {
 			struct : std::codecvt<char16_t, char, std::mbstate_t> {
 			} codecvt;
-			std::mbstate_t state{};
-			std::string result((std::max)(input.size() * 3 / 2, std::size_t(4)), '\0');
+			std::mbstate_t state;
+			std::string result(std::max(input.size() * 3 / 2, std::size_t(4)), '\0');
 			const char16_t *remaining_input = input.data();
 			std::size_t produced_output = 0;
 			while(true) {
@@ -33,7 +32,7 @@ namespace sqlite {
 					produced_output = used_output - result.data();
 					result.resize(
 							result.size()
-							+ (std::max)((&input[input.size()] - remaining_input) * 3 / 2,
+							+ std::max((&input[input.size()] - remaining_input) * 3 / 2,
 							           std::ptrdiff_t(4)));
 				}
 			}

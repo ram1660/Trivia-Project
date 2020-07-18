@@ -26,7 +26,7 @@ struct RoomData
 
 struct GameData
 {
-	Question currectQuestion;
+	Question* currectQuestion;
 	unsigned int correctAnswerCount;
 	unsigned int wrongAnswerCount;
 	unsigned int averageAnswerTime;
@@ -136,18 +136,18 @@ struct SubmitAnswerResponse
 	unsigned int correctAnswer;
 };
 
-struct GetGameResultsResponse
-{
-	unsigned int status;
-	std::vector<PlayerResults> results;
-};
-
 struct PlayerResults
 {
 	std::string username;
 	unsigned int correctAnswerCount;
 	unsigned int wrongAnswerCount;
 	unsigned int averageAnswerTime;
+};
+
+struct GetGameResultsResponse
+{
+	unsigned int status;
+	std::vector<PlayerResults> results;
 };
 		/*REQUEST*/
 struct LoginRequest
@@ -199,13 +199,4 @@ struct GeneralResponse
 struct SubmitAnswerRequest
 {
 	unsigned int answerId;
-};
-
-		/*MANAGERS*/
-struct GameData
-{
-	Question* currentQuestion;
-	unsigned int correctAnswerCount;
-	unsigned int wrongAnswerCount;
-	unsigned int averageAnswerTime;
 };

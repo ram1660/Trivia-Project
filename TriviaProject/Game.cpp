@@ -10,7 +10,7 @@ Game::Game(std::vector<Question> questions) : m_questions(questions)
 
 Question Game::getQuestionForUser(LoggedUser user)
 {
-	return Question();
+	return Question("asd", "asd", "asd", "zxc", "Asd");
 }
 
 bool Game::submitAnswer(unsigned int answer)
@@ -20,5 +20,9 @@ bool Game::submitAnswer(unsigned int answer)
 
 void Game::removePlayer(std::string username)
 {
-	m_players.erase(LoggedUser(username));
+	// for(std::pair<LoggedUser, GameData> loggedUser : m_players)
+	// {
+	// 	if(loggedUser.first.getUsername() == username)
+	// 		m_players.erase(loggedUser.first);
+	// }
 }

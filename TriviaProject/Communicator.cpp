@@ -9,19 +9,27 @@ Communicator::Communicator() : m_handlerFactory(new LoginManager(), new RoomMana
 {
 	_serverSocket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	if (_serverSocket == INVALID_SOCKET)
-		throw std::exception(__FUNCTION__ " - socket");
+	if (_serverSocket < 0)
+	{
+		std::string temp =__FUNCTION__;
+		temp.append(" - socket");
+		throw std::runtime_error(temp);
+	}
 }
 
 Communicator::~Communicator()
 {
 	for (int i = 0; i < m_clients.size(); i++)
 		delete m_clients[i];
-	try
+	int status = shutdown(_serverSocket, SHUT_RDWR);
+	if(!status)
 	{
-		::closesocket(_serverSocket);
+		//status = close(_serverSocket);
 	}
-	catch (...) {}
+	else
+	{
+		std::runtime_error("Could not close socket??");
+	}
 }
 void Communicator::bindAndListen()
 {
@@ -30,10 +38,18 @@ void Communicator::bindAndListen()
 	sa.sin_port = htons(PORT);
 	sa.sin_family = AF_INET;
 	sa.sin_addr.s_addr = INADDR_ANY;
-	if (::bind(_serverSocket, (struct sockaddr*)&sa, sizeof(sa)) == SOCKET_ERROR)
-		throw std::exception(__FUNCTION__ " - bind");
-	if (::listen(_serverSocket, SOMAXCONN) == SOCKET_ERROR)
-		throw std::exception(__FUNCTION__ " - listen");
+	if (::bind(_serverSocket, (struct sockaddr*)&sa, sizeof(sa)))
+	{
+		std::string temp =__FUNCTION__;
+		temp.append(" - bind");
+		throw std::runtime_error(temp);
+	}
+	if (::listen(_serverSocket, SOMAXCONN) == -1)
+	{
+		std::string temp =__FUNCTION__;
+		temp.append(" - listen");
+		throw std::runtime_error(temp);
+	}
 	std::cout << "Listening on port " << PORT << std::endl;
 }
 void Communicator::handleRequests()
@@ -162,8 +178,8 @@ void Communicator::startThreadForNewClient()
 {
 	SOCKET client_socket = ::accept(_serverSocket, NULL, NULL);
 	cout << "New client has been conected!" << endl;
-	if (client_socket == INVALID_SOCKET)
-		throw std::exception(__FUNCTION__);
+	if (client_socket < 0)
+		throw std::runtime_error(__FUNCTION__);
 	{
 		lock_guard<mutex> usersLocker(mClients);
 		m_clients.insert(pair<SOCKET, IRequestHandler*>(client_socket, m_handlerFactory.createLoginRequestHandler()));
@@ -235,8 +251,8 @@ void Communicator::sendData(SOCKET sc, Buffer message)
 	char* n = new char[buff.size()];
 	for (int i = 0; i < buff.size(); i++)
 		n[i] = buff[i];
-	if (send(sc, n, buff.size(), 0) == INVALID_SOCKET)
-		throw std::exception("Error while sending message to client");
+	if (send(sc, n, buff.size(), 0) < 0)
+		throw std::runtime_error("Error while sending message to client");
 }
 
 #pragma region Extracting data from client section
@@ -285,11 +301,11 @@ char * Communicator::getPartFromSocket(SOCKET sc, int bytesNum, int flags)
 	char* data = new char[bytesNum + 1];
 	int res = recv(sc, data, bytesNum + 2, flags);
 
-	if (res == INVALID_SOCKET)
+	if (res < 0)
 	{
 		std::string s = "Error while recieving from socket: ";
 		s += std::to_string(sc);
-		throw std::exception(s.c_str());
+		throw std::runtime_error(s);
 	}
 	return data;
 }

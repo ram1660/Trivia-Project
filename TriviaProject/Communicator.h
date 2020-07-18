@@ -1,12 +1,13 @@
 #pragma once
 #include <iostream>
-#pragma comment(lib, "ws2_32.lib")
-#include <WinSock2.h>
+#include <stdio.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
 #include <map>
 #include <thread>
 #include <mutex>
 #include <stdlib.h>
-#include <stdio.h>
 #include <deque>
 #include <condition_variable>
 #include "Buffer.h"
@@ -16,6 +17,7 @@
 class IRequestHandler;
 class HighscoreTable;
 class RequestHandlerFactory;
+typedef int SOCKET;
 class Communicator
 {
 public:
@@ -36,7 +38,10 @@ private:
 	void clientHandler(SOCKET clientSocket);
 	std::map<SOCKET, IRequestHandler*> m_clients; // Shared resource
 	RequestHandlerFactory m_handlerFactory;
+	
 	SOCKET _serverSocket;
+	struct sockaddr_in _server;
+
 	std::deque<std::pair<SOCKET, Request>> m_messageQ; // Shared resource
 	std::map<SOCKET, Request> m_keepAliveMap;
 };

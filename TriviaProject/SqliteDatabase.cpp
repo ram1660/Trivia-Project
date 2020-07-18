@@ -3,7 +3,7 @@ bool SqliteDatabase::open()
 {
 	std::string dbFileName = "MyDB.sqlite";
 
-	int doesFileExist = _access(dbFileName.c_str(), 0);
+	int doesFileExist = doesFileExists(dbFileName);
 	int res = sqlite3_open(dbFileName.c_str(), &db);
 	if (res != SQLITE_OK)
 	{
@@ -11,7 +11,6 @@ bool SqliteDatabase::open()
 		std::cout << "Failed to open DB" << std::endl;
 		return false;
 	}
-
 	if (doesFileExist == -1)
 	{
 		std::cout << "Database did not found create new one" << std::endl;
@@ -47,7 +46,11 @@ bool SqliteDatabase::open()
 	}
 	return true;
 }
-
+inline bool SqliteDatabase::doesFileExists (const std::string& name) 
+{
+	struct stat buffer;   
+	return (stat (name.c_str(), &buffer) == 0); 
+}
 void SqliteDatabase::clear()
 {
 	m_users.clear();

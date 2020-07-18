@@ -1,10 +1,8 @@
 #pragma once
-#include <iostream>
-#include <winsock2.h>
 #include <map>
 #include <string>
 #include <list>
-#include <io.h>
+#include <sys/io.h>
 
 #include "LoggedUser.h"
 #include "sqlite3.h"

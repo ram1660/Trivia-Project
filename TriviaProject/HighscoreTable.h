@@ -1,4 +1,5 @@
 #pragma once
+#include "sqlite3.h"
 #include "SqliteDatabase.h"
 class IDatabase;
 class LoggedUser;

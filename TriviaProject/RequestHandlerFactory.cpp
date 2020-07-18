@@ -26,8 +26,8 @@ RoomMemberRequestHandler * RequestHandlerFactory::createRoomMemberRequestHandler
 
 GameRequestHandler* RequestHandlerFactory::createGameRequestHandler()
 {
-	GameManager* gameManager = new GameManager();
-	return gameManager;
+	GameRequestHandler* gameRequestHandler = new GameRequestHandler();
+	return gameRequestHandler;
 }
 
 RequestHandlerFactory::~RequestHandlerFactory()

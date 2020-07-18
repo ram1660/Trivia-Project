@@ -49,7 +49,8 @@ RequestResult GameRequestHandler::submitAnswer(Request r)
 	RequestResult result;
 	Buffer buffer;
 	SubmitAnswerResponse response;
-	SubmitAnswerRequest request = JsonRequestPacketDeserializer::deserializeSubmitAnswerRequest(r.buffer);
+	buffer.buffer = r.buffer;
+	SubmitAnswerRequest request = JsonRequestPacketDeserializer::deserializeSubmitAnswerRequest(buffer);
 	unsigned int userAnswer = request.answerId;
 	m_game->submitAnswer(userAnswer);
 

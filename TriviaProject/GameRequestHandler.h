@@ -2,6 +2,9 @@
 #include "IRequestHandler.h"
 #include "GameManager.h"
 #include "JsoneResponsePacketSerializer.h"
+class Game;
+class LoggedUser;
+class GameManager;
 class GameRequestHandler :
 	public IRequestHandler
 {

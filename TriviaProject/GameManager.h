@@ -5,6 +5,7 @@
 class GameManager
 {
 public:
+	GameManager();
 	GameManager(IDatabase* database);
 	Game createGame(Room* currentRoom);
 	void deleteGame(Game* target);

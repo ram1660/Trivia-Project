@@ -7,7 +7,7 @@ public:
 	~LoggedUser();
 	LoggedUser(std::string name);
 	bool operator==(const LoggedUser &user);
-	std::string getUsername();
+	std::string getUsername() const;
 private:
 	std::string m_username;
 

@@ -1,6 +1,7 @@
 #pragma once
-#include <WinSock2.h>
-enum Protocol : byte
+#include <iostream>
+//typedef bitset<8> byte;
+enum Protocol : char
 {
 	GENERAL_RESPONSE = 10,
 	RESPONSE_SIGNIN = 11,

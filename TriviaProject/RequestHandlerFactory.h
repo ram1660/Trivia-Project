@@ -9,6 +9,7 @@
 #include "RoomAdminRequestHandler.h"
 #include "GameRequestHandler.h"
 class RoomManager;
+class GameManager;
 class MenuRequestHandler;
 class HighscoreTable;
 class LoginManager;
@@ -31,6 +32,6 @@ private:
 	LoginManager* m_loginManager;
 	RoomManager* m_roomManager;
 	HighscoreTable* m_highscoreTable;
-	GameManager* m_gameManager
+	GameManager* m_gameManager;
 };
 
