@@ -167,6 +167,7 @@
     <ClInclude Include="sqlite_modern_cpp\log.h" />
     <ClInclude Include="sqlite_modern_cpp\utility\function_traits.h" />
     <ClInclude Include="structures.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="WSAInitializer.h" />
   </ItemGroup>

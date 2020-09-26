@@ -50,7 +50,7 @@ RequestResult RoomMemberRequestHandler::getRoomState(Request r)
 	response.hasGameBegun = roomMeta->isActive;
 	response.answerTimeout = roomMeta->timePerQuestion;
 	for (size_t i = 0; i < m_room->getAllUsers().size(); i++)
-		response.players[i] = m_room->getAllUsers()[i].getUsername();
+		response.players[i] = m_room->getAllUsers()[i]->getUsername();
 	response.questionCount = roomMeta->questionCount;
 	buffer.buffer = JsonResponsePacketSerializer::serializeResponse(response);
 	result.response = buffer;

@@ -111,6 +111,18 @@ bool SqliteDatabase::doesUserExists(std::string username)
 	return isExists;
 }
 
+int SqliteDatabase::getQuestionsSize()
+{
+	std::string sqlStatement = "SELECT COUNT(*) FROM QUESTION;";
+	char* errMessage = nullptr;
+	int size = 0;
+	int res = sqlite3_exec(db, sqlStatement.c_str(), callbackQuestionsSize, &size, &errMessage);
+	if (res != SQLITE_OK)
+		std::cout << "Could not get the questions count!" << std::endl;
+	return size;
+}
+
+
 bool SqliteDatabase::DoesPasswordMatchUser(std::string username, std::string password)
 {
 	std::string sqlStatement = "SELECT EXISTS (SELECT 1 from user WHERE username = '" + username + "' AND password = '" + password + "');";
@@ -120,6 +132,20 @@ bool SqliteDatabase::DoesPasswordMatchUser(std::string username, std::string pas
 	if (res != SQLITE_OK)
 		std::cout << "Something is wrong!" << std::endl;
 	return isMatch;
+}
+
+std::vector<Question> SqliteDatabase::generateRandomQuestions()
+{
+	int questionsAmount = getQuestionsSize();
+	std::vector<Question> selectedQuestions;
+	if (!questionsAmount)
+		return selectedQuestions;
+	std::string sqlStatement = "SELECT * FROM QUESTION ORDER BY Random() LIMIT " + questionsAmount;
+	char* errMessage = nullptr;
+	int res = sqlite3_exec(db, sqlStatement.c_str(), callbackSelectQuestions, &selectedQuestions, &errMessage);
+	if (res != SQLITE_OK)
+		std::cout << "Could not generate questions! Maybe there are not any questions to select from?" << std::endl;
+	return selectedQuestions;
 }
 
 int SqliteDatabase::callbackUser(void * data, int argc, char ** argv, char ** azColName)
@@ -196,4 +222,47 @@ int SqliteDatabase::callbackQuestion(void *data, int argc, char **argv, char **a
 	m_question.push_back(q);
 	return 0;
 
+}
+
+int SqliteDatabase::callbackQuestionsSize(void* data, int argc, char** argv, char** azColName)
+{
+	int* size = (int*)data;
+	*size= std::atoi(argv[0]);
+	return 0;
+}
+
+int SqliteDatabase::callbackSelectQuestions(void* data, int argc, char** argv, char** azColName)
+{
+	std::string question;
+	std::string correct_ans;
+	std::string ans1;
+	std::string ans2;
+	std::string ans3;
+	std::vector<Question>* questionsCollection = (std::vector<Question>*)data;
+	for (int i = 0; i < argc; i++)
+	{
+		if (std::string(azColName[i]) == "QUESTION")
+		{
+			question = (argv[i]);
+		}
+		else if (std::string(azColName[i]) == "CORRECT_ANS")
+		{
+			correct_ans = (argv[i]);
+		}
+		else if (std::string(azColName[i]) == "ANS1")
+		{
+			ans1 = (argv[i]);
+		}
+		else if (std::string(azColName[i]) == "ANS2")
+		{
+			ans2 = (argv[i]);
+		}
+		else if (std::string(azColName[i]) == "ANS3")
+		{
+			ans3 = (argv[i]);
+		}
+	}
+	Question q(question, correct_ans, ans1, ans2, ans3);
+	questionsCollection->push_back(q);
+	return 0;
 }

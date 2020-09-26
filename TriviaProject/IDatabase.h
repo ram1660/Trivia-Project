@@ -17,7 +17,6 @@ class IDatabase
 public:
 	//std::list<Question> getQuestions (int);
 	//std::map<LoggedUser, int> getHighscores();
-	
 	//user
 	virtual bool doesUserExists(std::string username) = 0;
 	virtual void createUser(std::string username, std::string password, std::string email) = 0;
@@ -25,6 +24,7 @@ public:
 	virtual bool DoesPasswordMatchUser(std::string username, std::string password) = 0;
 	virtual sqlite3* getDatabase() = 0;
 	//questions
+	virtual std::vector<Question> generateRandomQuestions() = 0;
 
 	virtual bool open() = 0;
 	virtual void clear() = 0;

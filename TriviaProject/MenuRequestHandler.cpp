@@ -1,10 +1,8 @@
 #include "MenuRequestHandler.h"
 
-MenuRequestHandler::MenuRequestHandler()
-{
-}
 
-MenuRequestHandler::MenuRequestHandler(LoginManager* loginManager, RoomManager * room, HighscoreTable *table, RequestHandlerFactory * factory) : m_loginManager(loginManager), m_roomManager(room), m_highscoreTable(table), m_handlerFactory(factory)
+
+MenuRequestHandler::MenuRequestHandler(LoginManager* loginManager, RoomManager * room, HighscoreTable *table, RequestHandlerFactory * factory) : m_loginManager(loginManager), m_roomManager(room), m_highscoreTable(table), m_handlerFactory(factory), m_user(nullptr)
 {
 }
 
@@ -92,9 +90,9 @@ RequestResult MenuRequestHandler::getPlayersInRoom(Request r)
 	{
 		Room requestedRoom = m_roomManager->getSpecificRoom(room.getMetaRoom()->id);
 		GetPlayersInRoomResponse response;
-		vector<LoggedUser> vec = requestedRoom.getAllUsers();
+		vector<LoggedUser*> vec = requestedRoom.getAllUsers();
 		for (int i = 0; i < vec.size(); i++)
-			response.rooms.push_back(vec[i].getUsername());
+			response.rooms.push_back(vec[i]->getUsername());
 		Buffer b;
 		b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
 		result.response = b;
@@ -152,27 +150,16 @@ RequestResult MenuRequestHandler::joinRoom(Request r)
 	}
 	else
 	{
-		if (find(m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().begin(), m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().end(), LoggedUser(roomRequest.username)) == m_roomManager->getSpecificRoom(roomRequest.roomId).getAllUsers().end())
-		{
-			m_roomManager->getSpecificRoom(roomRequest.roomId).addUser(roomRequest.username);
-			JoinRoomResponse response;
-			response.status = RESPONSE_JOIN_ROOM;
-			Buffer b;
-			b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
-			result.response = b;
-			result.newHandler = m_handlerFactory->createRoomMemberRequestHandler();
-		}
-		else
-		{
-			ErrorResponse error;
-			error.message = "ERROR: User is already inside this room!";
-			Buffer b;
-			b.buffer = JsonResponsePacketSerializer::serializeResponse(error);
-			result.response = b;
-			result.newHandler = nullptr;
-		}
-	}
 
+		bool success = m_roomManager->getSpecificRoom(roomRequest.roomId).addUser(roomRequest.username);
+		JoinRoomResponse response;
+		
+		response.status = success ? RESPONSE_JOIN_ROOM : RESPONSE_ROOM_IS_FULL;
+		Buffer b;
+		b.buffer = JsonResponsePacketSerializer::serializeResponse(response);
+		result.response = b;
+		result.newHandler = m_handlerFactory->createRoomMemberRequestHandler();
+	}
 	return result;
 }
 

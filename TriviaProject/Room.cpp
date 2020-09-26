@@ -13,25 +13,25 @@ Room::~Room()
 {
 }
 
-void Room::addUser(string username)
+bool Room::addUser(string username)
 {
 	// Check if the room is full?
 	if (m_users.size() == m_metadata->maxPlayers)
-		cout << "The room is full!" << endl;
+		return false;
 	else
 	{
-		 m_users.push_back(LoggedUser(username));
-		 cout << "Player has joined to the room!" << endl;
+		 m_users.push_back(new LoggedUser(username));
+		 return true;
 	}
 }
 
 void Room::removeUser(string username)
 {
 	LoggedUser user(username);
-	m_users.erase(remove(m_users.begin(), m_users.end(), user), m_users.end());
+	m_users.erase(remove(m_users.begin(), m_users.end(), &user), m_users.end());
 }
 
-vector<LoggedUser> Room::getAllUsers() const
+vector<LoggedUser*> Room::getAllUsers()
 {
 	return m_users;
 }

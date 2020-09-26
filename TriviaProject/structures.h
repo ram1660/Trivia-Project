@@ -26,10 +26,11 @@ struct RoomData
 
 struct GameData
 {
-	Question currectQuestion;
-	unsigned int correctAnswerCount;
-	unsigned int wrongAnswerCount;
-	unsigned int averageAnswerTime;
+	Question* currentQuestion;
+	unsigned int correctAnswerCount = 0;
+	unsigned int wrongAnswerCount = 0;
+	unsigned int averageAnswerTime = 0;
+	unsigned int currentQuestionIndex = 0;
 };
 
 		/*HANDLERS*/
@@ -101,11 +102,11 @@ struct StartRoomResponse
 
 struct GetRoomStateResponse
 {
-	unsigned int status;
-	bool hasGameBegun;
+	unsigned int status = 0;
+	bool hasGameBegun = false;
 	vector<string> players;
-	unsigned int questionCount;
-	unsigned int answerTimeout; 
+	unsigned int questionCount = 0;
+	unsigned int answerTimeout = 0; 
 };
 
 struct LeaveRoomResponse
@@ -120,36 +121,38 @@ struct ErrorResponse
 
 struct KeepAliveResponse
 {
-	int code;
+	int code = 0;
 };
 
 struct GetQuestionResponse
 {
-	unsigned int status;
+	unsigned int status = 0;
 	std::string question;
 	std::map<unsigned int, std::string> answers;
 };
 
 struct SubmitAnswerResponse
 {
-	unsigned int status;
-	unsigned int correctAnswer;
-};
-
-struct GetGameResultsResponse
-{
-	unsigned int status;
-	std::vector<PlayerResults> results;
+	unsigned int status = 0;
+	unsigned int correctAnswer = 0;
 };
 
 struct PlayerResults
 {
 	std::string username;
-	unsigned int correctAnswerCount;
-	unsigned int wrongAnswerCount;
-	unsigned int averageAnswerTime;
+	unsigned int correctAnswerCount = 0;
+	unsigned int wrongAnswerCount = 0;
+	unsigned int averageAnswerTime = 0;
 };
-		/*REQUEST*/
+
+struct GetGameResultsResponse
+{
+	unsigned int status = 0;
+	std::vector<PlayerResults> results;
+};
+
+/*REQUEST*/
+
 struct LoginRequest
 {
 	string username;
@@ -165,20 +168,20 @@ struct CreateRoomRequest
 {
 	string username;
 	string roomName;
-	unsigned int maxUsers;
-	unsigned int questionCount;
-	unsigned int answerTimeout;
+	unsigned int maxUsers = 0;
+	unsigned int questionCount = 0;
+	unsigned int answerTimeout = 0;
 };
 
 struct GetPlayersInRoomRequest
 {
-	unsigned int roomId;
+	unsigned int roomId = -999;
 };
 
 struct JoinRoomRequest
 {
 	string username;
-	unsigned int roomId;
+	unsigned int roomId = -999;
 };
 
 struct SignoutRequest
@@ -188,24 +191,29 @@ struct SignoutRequest
 
 struct KeepAliveRequest
 {
-	unsigned int code;
+	unsigned int code = 0;
 };
 
 struct GeneralResponse
 {
-	unsigned int code;
+	unsigned int code = 0;
 };
 	
 struct SubmitAnswerRequest
 {
-	unsigned int answerId;
+	unsigned int answerId = -999;
+};
+
+struct GetGameResultsRequest
+{
+	unsigned int roodId = -999;
 };
 
 		/*MANAGERS*/
-struct GameData
-{
-	Question* currentQuestion;
-	unsigned int correctAnswerCount;
-	unsigned int wrongAnswerCount;
-	unsigned int averageAnswerTime;
-};
+//struct GameData
+//{
+//	Question* currentQuestion;
+//	unsigned int correctAnswerCount;
+//	unsigned int wrongAnswerCount;
+//	unsigned int averageAnswerTime;
+//};

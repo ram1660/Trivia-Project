@@ -12,7 +12,7 @@ class LoginManager;
 class MenuRequestHandler : public IRequestHandler
 {
 public:
-	MenuRequestHandler();
+	MenuRequestHandler() = delete;
 	MenuRequestHandler(LoginManager* loginManager, RoomManager* room, HighscoreTable* table, RequestHandlerFactory* factory);
 	~MenuRequestHandler();
 	bool isRequestRelevant(Request r) override;

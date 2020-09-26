@@ -31,6 +31,8 @@ bool LoginManager::login(std::string username, std::string password)
 	if (m_database->doesUserExists(username) && m_database->DoesPasswordMatchUser(username, password))
 	{
 		LoggedUser user(username);
+		if (std::find(m_loggedUsers.begin(), m_loggedUsers.end(), user) != m_loggedUsers.end())
+			return false;
 		m_loggedUsers.push_back(user);
 		return true;
 	}

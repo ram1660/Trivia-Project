@@ -22,7 +22,7 @@ bool LoggedUser::operator==(const LoggedUser &user)
 	return false;
 }
 
-std::string LoggedUser::getUsername()
+std::string LoggedUser::getUsername() const
 {
 	return m_username;
 }

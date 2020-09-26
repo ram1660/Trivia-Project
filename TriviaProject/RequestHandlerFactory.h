@@ -31,6 +31,6 @@ private:
 	LoginManager* m_loginManager;
 	RoomManager* m_roomManager;
 	HighscoreTable* m_highscoreTable;
-	GameManager* m_gameManager
+	GameManager* m_gameManager;
 };
 

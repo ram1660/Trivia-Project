@@ -10,13 +10,13 @@ public:
 	Room(RoomData* data);
 
 	~Room();
-	void addUser(string username);
+	bool addUser(string username);
 	void removeUser(string usnername);
-	vector<LoggedUser> getAllUsers() const;
+	vector<LoggedUser*> getAllUsers();
 	RoomData* getMetaRoom() const;
 	bool operator ==(Room &other);
 private:
 	RoomData* m_metadata;
-	vector<LoggedUser> m_users;
+	vector<LoggedUser*> m_users;
 };
 

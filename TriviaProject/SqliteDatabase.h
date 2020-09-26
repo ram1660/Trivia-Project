@@ -13,8 +13,8 @@ public:
 	void createUser(std::string username, std::string password, std::string email) override;
 	void deleteUser(LoggedUser& user) override;
 	bool DoesPasswordMatchUser(std::string username, std::string password) override;
-	static int doesUserExistsCallback(void * data, int argc, char ** argv, char ** azColName);
 	//questions
+	std::vector<Question> generateRandomQuestions() override;
 
 	bool open() override;
 	//void close();
@@ -23,10 +23,14 @@ public:
 private:
 	std::list<LoggedUser> m_users;
 	std::list<Question> m_question;
-
+	int getQuestionsSize();
 	// Callbacks
+
+	static int doesUserExistsCallback(void* data, int argc, char** argv, char** azColName);
 	int callbackUser(void* data, int argc, char** argv, char** azColName);
 	int callbackQuestion(void* data, int argc, char** argv, char** azColName);
+	static int callbackQuestionsSize(void* data, int argc, char** argv, char** azColName);
+	static int callbackSelectQuestions(void* data, int argc, char** argv, char** azColName);
 	//int callbackUser(void* data, int argc, char** argv, char** azColName);
 
 
