@@ -15,7 +15,7 @@ LoggedUser::LoggedUser(std::string name) : m_username(name)
 {
 }
 
-bool LoggedUser::operator==(const LoggedUser &user)
+bool LoggedUser::operator==(const LoggedUser &user) const
 {
 	if (this->m_username == user.m_username)
 		return true;

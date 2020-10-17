@@ -15,11 +15,12 @@ public:
 	LoginRequestHandler();
 	LoginRequestHandler(LoginManager* manager, RequestHandlerFactory* factory);
 	~LoginRequestHandler();
-	bool isRequestRelevant(Request r) override;
+	bool isRequestRelevant(const Request& r) override;
 	RequestResult handleRequest(Request r) override;
 private:
+	RequestResult login(const Request& r);
+	RequestResult signup(const Request& r);
+
 	LoginManager* m_loginManager;
 	RequestHandlerFactory* m_handlerFactory;
-	RequestResult login(Request r);
-	RequestResult signup(Request r);
 };

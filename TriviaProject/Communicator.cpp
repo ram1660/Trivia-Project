@@ -222,20 +222,20 @@ void Communicator::clientHandler(SOCKET clientSocket)
 	}
 }
 
-void Communicator::sendData(SOCKET sc, Buffer message)
+void Communicator::sendData(SOCKET sc, Buffer& message)
 {
 	vector<char> buff;
 	buff.push_back(message.buffer[0]);
 	message.buffer.erase(message.buffer.begin());
 	string strMessage{ (message.buffer).begin(), (message.buffer).end() };
 	for (int i = 0; i < 4; i++)
-		buff.push_back(strMessage.length() >> ((3 - i) * 8));
+		buff.push_back(static_cast<char>(strMessage.length() >> ((3 - i) * 8)));
 	for (int i = 0; i < strMessage.size(); i++)
 		buff.push_back(strMessage[i]);
 	char* n = new char[buff.size()];
 	for (int i = 0; i < buff.size(); i++)
 		n[i] = buff[i];
-	if (send(sc, n, buff.size(), 0) == INVALID_SOCKET)
+	if (send(sc, n, static_cast<int>(buff.size()), 0) == INVALID_SOCKET)
 		throw std::exception("Error while sending message to client");
 }
 

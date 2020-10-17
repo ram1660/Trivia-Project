@@ -97,7 +97,6 @@ SqliteDatabase::SqliteDatabase() : db(nullptr)
 SqliteDatabase::~SqliteDatabase()
 {
 	sqlite3_close(db);
-	delete db;
 }
 
 bool SqliteDatabase::doesUserExists(std::string username)
@@ -113,10 +112,10 @@ bool SqliteDatabase::doesUserExists(std::string username)
 
 int SqliteDatabase::getQuestionsSize()
 {
-	std::string sqlStatement = "SELECT COUNT(*) FROM QUESTION;";
+	const char* sqlStatement = "SELECT COUNT(*) FROM QUESTION;";
 	char* errMessage = nullptr;
 	int size = 0;
-	int res = sqlite3_exec(db, sqlStatement.c_str(), callbackQuestionsSize, &size, &errMessage);
+	int res = sqlite3_exec(db, sqlStatement, callbackQuestionsSize, &size, &errMessage);
 	if (res != SQLITE_OK)
 		std::cout << "Could not get the questions count!" << std::endl;
 	return size;
@@ -150,6 +149,7 @@ std::vector<Question> SqliteDatabase::generateRandomQuestions()
 
 int SqliteDatabase::callbackUser(void * data, int argc, char ** argv, char ** azColName)
 {
+	std::list<LoggedUser*>* users = static_cast<std::list<LoggedUser*>*>(data);
 	std::string name;
 	std::string gmail;
 	std::string password;
@@ -168,8 +168,7 @@ int SqliteDatabase::callbackUser(void * data, int argc, char ** argv, char ** az
 			password = (argv[i]);
 		}
 	}
-	LoggedUser user(name);
-	m_users.push_back(user);
+	users->push_back(new LoggedUser(name));
 	return 0;
 
 }
@@ -187,9 +186,10 @@ int SqliteDatabase::doesUserExistsCallback(void * data, int argc, char ** argv, 
 	}
 	return 0;
 }
-
+// Need to implement this query
 int SqliteDatabase::callbackQuestion(void *data, int argc, char **argv, char **azColName)
 {
+	std::list<Question>* questions = static_cast<std::list<Question>*>(data);
 	std::string question;
 	std::string correct_ans;
 	std::string ans1;
@@ -219,7 +219,7 @@ int SqliteDatabase::callbackQuestion(void *data, int argc, char **argv, char **a
 		}
 	}
 	Question q(question, correct_ans, ans1, ans2, ans3);
-	m_question.push_back(q);
+	questions->push_back(q);
 	return 0;
 
 }
@@ -238,7 +238,7 @@ int SqliteDatabase::callbackSelectQuestions(void* data, int argc, char** argv, c
 	std::string ans1;
 	std::string ans2;
 	std::string ans3;
-	std::vector<Question>* questionsCollection = (std::vector<Question>*)data;
+	std::vector<Question>* questionsCollection = static_cast<std::vector<Question>*>(data);
 	for (int i = 0; i < argc; i++)
 	{
 		if (std::string(azColName[i]) == "QUESTION")

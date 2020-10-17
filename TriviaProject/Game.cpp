@@ -18,7 +18,7 @@ Game::Game(std::vector<Question> questions) : m_questions(questions)
 Question& Game::getQuestionForUser(LoggedUser& user)
 {
 	Timer* newTimer = new Timer();
-	m_players_timer.emplace(std::make_pair(user, newTimer));
+	m_players_timer.emplace(std::make_pair(&user, newTimer));
 	m_players_timer.at(&user)->start();
 	return *m_players.find(&user)->second.currentQuestion;
 }

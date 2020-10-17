@@ -15,7 +15,7 @@ public:
 	MenuRequestHandler() = delete;
 	MenuRequestHandler(LoginManager* loginManager, RoomManager* room, HighscoreTable* table, RequestHandlerFactory* factory);
 	~MenuRequestHandler();
-	bool isRequestRelevant(Request r) override;
+	bool isRequestRelevant(const Request& r) override;
 	RequestResult handleRequest(Request r) override;
 private:
 	LoggedUser* m_user;
@@ -28,7 +28,7 @@ private:
 	RequestResult getRooms(Request r);
 	RequestResult getPlayersInRoom(Request r);
 	RequestResult getHighscores(Request r);
-	RequestResult joinRoom(Request r);
+	RequestResult joinRoom(const Request& r);
 	RequestResult createRoom(Request r);
 };
 

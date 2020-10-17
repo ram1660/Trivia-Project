@@ -3,7 +3,7 @@
 class IRequestHandler
 {
 public:
-	virtual bool isRequestRelevant(Request r) = 0;
+	virtual bool isRequestRelevant(const Request& r) = 0;
 	virtual RequestResult handleRequest(Request r) = 0;
 };
 

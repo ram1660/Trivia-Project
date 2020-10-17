@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <map>
 #include <bitset>
 #include <cstddef>
@@ -43,8 +42,13 @@ struct RequestResult
 struct Request
 {
 	unsigned int id = 0;
-	time_t receivalTime;
+	time_t receivalTime = 0;
 	vector<char> buffer;
+};
+
+struct KickRequest
+{
+	std::string user;
 };
 
 		/*RESPONSE*/
@@ -107,6 +111,11 @@ struct GetRoomStateResponse
 	vector<string> players;
 	unsigned int questionCount = 0;
 	unsigned int answerTimeout = 0; 
+};
+
+struct KickResponse
+{
+	unsigned int status = 0;
 };
 
 struct LeaveRoomResponse

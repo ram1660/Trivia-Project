@@ -22,7 +22,7 @@ RequestResult LoginRequestHandler::handleRequest(Request r)
 		return signup(r);
 }
 
-RequestResult LoginRequestHandler::login(Request r)
+RequestResult LoginRequestHandler::login(const Request& r)
 {
 	// Calls to the DB with loginManager.
 	// Informing RequestResult struct and return it
@@ -61,7 +61,7 @@ RequestResult LoginRequestHandler::login(Request r)
 	return result;
 }
 
-RequestResult LoginRequestHandler::signup(Request r)
+RequestResult LoginRequestHandler::signup(const Request& r)
 {
 	// Calls to the DB.
 	// Informing RequestResult struct and return it
@@ -102,7 +102,7 @@ RequestResult LoginRequestHandler::signup(Request r)
 }
 
 
-bool LoginRequestHandler::isRequestRelevant(Request r)
+bool LoginRequestHandler::isRequestRelevant(const Request& r)
 {
 	if (r.id == REQUEST_SIGNUP || r.id == REQUEST_SIGNIN)
 		return true;

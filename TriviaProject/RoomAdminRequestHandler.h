@@ -8,15 +8,16 @@ public:
 	RoomAdminRequestHandler();
 	RoomAdminRequestHandler(Room* room, LoggedUser roomOwner, RoomManager* roomManager, RequestHandlerFactory* handlerFactory);
 	~RoomAdminRequestHandler();
-	bool isRequestRelevant(Request r) override;
+	bool isRequestRelevant(const Request& r) override;
 	RequestResult handleRequest(Request r) override;
 private:
 	Room* m_room;
 	LoggedUser m_user;
 	RoomManager* m_roomManager;
 	RequestHandlerFactory* m_handlerFactory;
-	RequestResult closeRoom(Request r);
-	RequestResult startGame(Request r);
-	RequestResult getRoomState(Request r);
+	RequestResult kickPlayer(const Request& r);
+	RequestResult closeRoom(const Request& r);
+	RequestResult startGame(const Request& r);
+	RequestResult getRoomState(const Request& r);
 };
 

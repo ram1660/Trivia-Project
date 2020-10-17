@@ -15,7 +15,7 @@ MenuRequestHandler::~MenuRequestHandler()
 	delete m_user;
 }
 
-bool MenuRequestHandler::isRequestRelevant(Request r)
+bool MenuRequestHandler::isRequestRelevant(const Request& r)
 {
 	if (r.id == REQUEST_JOIN_ROOM || r.id == REQUEST_CREATE_ROOM || r.id == REQUEST_GET_HIGHSCORE || r.id == REQUEST_GET_MY_STATS || r.id == REQUEST_SIGNOUT)
 		return true;
@@ -122,7 +122,7 @@ RequestResult MenuRequestHandler::getHighscores(Request r)
 	return result;
 }
 
-RequestResult MenuRequestHandler::joinRoom(Request r)
+RequestResult MenuRequestHandler::joinRoom(const Request& r)
 {
 	RequestResult result;
 	Buffer buff;
@@ -131,6 +131,7 @@ RequestResult MenuRequestHandler::joinRoom(Request r)
 	RoomData dataRoom;
 	bool isFound = false;
 	dataRoom.id = roomRequest.roomId;
+	//std::find(m_roomManager->getRooms())
 	for(RoomData* room : m_roomManager->getRooms())
 	{
 		if (dataRoom.id == room->id)

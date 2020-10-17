@@ -2,7 +2,6 @@
 #include "structures.h"
 #include "LoggedUser.h"
 #include "Timer.h"
-class LoggedUser;
 class Game
 {
 public:

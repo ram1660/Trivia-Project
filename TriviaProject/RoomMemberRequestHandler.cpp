@@ -13,7 +13,7 @@ RoomMemberRequestHandler::~RoomMemberRequestHandler()
 {
 }
 
-bool RoomMemberRequestHandler::isRequestRelevant(Request r)
+bool RoomMemberRequestHandler::isRequestRelevant(const Request& r)
 {
 	if (r.id == REQUEST_LEAVE_ROOM || r.id == REQUEST_GET_ROOM_STATE)
 		return true;

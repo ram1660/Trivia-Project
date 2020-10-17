@@ -10,7 +10,7 @@ RoomManager::~RoomManager()
 {
 }
 
-void RoomManager::createRoom(LoggedUser user, CreateRoomRequest roomInfo)
+void RoomManager::createRoom(LoggedUser& user, CreateRoomRequest roomInfo)
 {
 	RoomData data;
 	for (unsigned int i = 0; i < m_rooms.rbegin()->first; i++)
@@ -32,25 +32,24 @@ void RoomManager::deleteRoom(unsigned int roomId)
 	m_rooms.erase(roomId);
 }
 
-unsigned int RoomManager::getRoomState(int ID) const
+inline unsigned int RoomManager::getRoomState(int ID) const
 {
-	unsigned int state = m_rooms.at(ID).getMetaRoom()->isActive;
-	return state;
+	return m_rooms.at(ID).getMetaRoom()->isActive;
 }
 
 
-Room RoomManager::getSpecificRoom(int id)
+Room RoomManager::getSpecificRoom(int id) const
 {
 	RoomData data;
 	data.id = INVALID_ROOM;
 	Room room(&data);
-	for (int i = 0; i < m_rooms.size(); i++)
-		if (m_rooms[i].getMetaRoom()->id == id)
-			return m_rooms[i];
+	for (unsigned int i = 0; i < m_rooms.size(); i++)
+		if (m_rooms.at(i).getMetaRoom()->id == id)
+			return m_rooms.at(i);
 	return room;
 }
 
-Room RoomManager::getUserRoom(string user)
+Room RoomManager::getUserRoom(string user) const
 {
 	LoggedUser targetUser(user);
 	for (auto room : m_rooms)
@@ -64,7 +63,7 @@ bool RoomManager::isRoomExists(unsigned int id)
 	return (m_rooms.find(id) == m_rooms.end()) ? false : true;
 }
 
-std::vector<RoomData*> RoomManager::getRooms()
+std::vector<RoomData*> RoomManager::getRooms() const
 {
 	vector<RoomData*> roomsData;
 	for (auto room : m_rooms)

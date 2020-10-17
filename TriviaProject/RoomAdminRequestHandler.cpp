@@ -15,7 +15,7 @@ RoomAdminRequestHandler::~RoomAdminRequestHandler()
 	delete m_room;
 }
 
-bool RoomAdminRequestHandler::isRequestRelevant(Request r)
+bool RoomAdminRequestHandler::isRequestRelevant(const Request& r)
 {
 	if (r.id == REQUEST_CLOSE_ROOM || r.id == REQUEST_START_ROOM || r.id == REQUEST_GET_ROOM_STATE)
 		return true;
@@ -32,7 +32,15 @@ RequestResult RoomAdminRequestHandler::handleRequest(Request r)
 		return getRoomState(r);
 }
 
-RequestResult RoomAdminRequestHandler::closeRoom(Request r)
+RequestResult RoomAdminRequestHandler::kickPlayer(const Request& r)
+{
+	RequestResult result;
+	Buffer buffer;
+
+	return RequestResult();
+}
+
+RequestResult RoomAdminRequestHandler::closeRoom(const Request& r)
 {
 	RequestResult result;
 	Buffer buffer;
@@ -45,7 +53,7 @@ RequestResult RoomAdminRequestHandler::closeRoom(Request r)
 	return result;
 }
 
-RequestResult RoomAdminRequestHandler::startGame(Request r)
+RequestResult RoomAdminRequestHandler::startGame(const Request& r)
 {
 	RequestResult result;
 	Buffer buffer;
@@ -57,7 +65,7 @@ RequestResult RoomAdminRequestHandler::startGame(Request r)
 	return result;
 }
 
-RequestResult RoomAdminRequestHandler::getRoomState(Request r)
+RequestResult RoomAdminRequestHandler::getRoomState(const Request& r)
 {
 	RequestResult result;
 	Buffer buffer;

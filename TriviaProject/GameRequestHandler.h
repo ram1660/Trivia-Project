@@ -10,7 +10,7 @@ class GameRequestHandler :
 public:
 	GameRequestHandler();
 	GameRequestHandler(LoggedUser* user, Game* game, GameManager* gameManager, RequestHandlerFactory* factory);
-	bool isRequestRelevant(Request r) override;
+	bool isRequestRelevant(const Request& r) override;
 	RequestResult handleRequest(Request r) override;
 private:
 	Game* m_game;

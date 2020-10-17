@@ -11,7 +11,7 @@ public:
 	RoomMemberRequestHandler();
 	RoomMemberRequestHandler(Room *room, LoggedUser user, RoomManager* roomManager, RequestHandlerFactory* factory);
 	~RoomMemberRequestHandler();
-	bool isRequestRelevant(Request r) override;
+	bool isRequestRelevant(const Request& r) override;
 	RequestResult handleRequest(Request r) override;
 private:
 	Room* m_room;

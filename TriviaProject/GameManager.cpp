@@ -1,5 +1,4 @@
 #include "GameManager.h"
-#include <functional>
 
 GameManager::GameManager(IDatabase* database) : m_database(database)
 {

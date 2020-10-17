@@ -8,7 +8,7 @@ GameRequestHandler::GameRequestHandler(LoggedUser* user, Game* game, GameManager
 {
 }
 
-bool GameRequestHandler::isRequestRelevant(Request r)
+bool GameRequestHandler::isRequestRelevant(const Request& r)
 {
 	if (r.id == REQUEST_GET_QUESTION || r.id == REQUEST_SUBMIT_ANSWER || r.id == REQUEST_GET_GAME_RESULTS || r.id == REQUEST_LEAVE_GAME)
 		return true;
@@ -32,7 +32,7 @@ RequestResult GameRequestHandler::getQuestion(Request r)
 	RequestResult result;
 	Buffer buffer;
 	GetQuestionResponse response;
-	Question userQuestion = m_game->getQuestionForUser(m_user);
+	Question userQuestion = m_game->getQuestionForUser(*m_user);
 	response.question = userQuestion.getQuestion();
 	for (unsigned int i = 0; i < userQuestion.getPossibleAnswers().size(); i++)
 		response.answers.insert(std::make_pair(i, userQuestion.getPossibleAnswers()[i]));
