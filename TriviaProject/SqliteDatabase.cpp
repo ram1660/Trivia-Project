@@ -101,6 +101,7 @@ SqliteDatabase::~SqliteDatabase()
 
 bool SqliteDatabase::doesUserExists(std::string username)
 {
+	
 	std::string sqlStatement = "SELECT EXISTS (SELECT 1 from USER WHERE USERNAME = '" + username + "');";
 	char* errMessage = nullptr;
 	bool isExists = false;

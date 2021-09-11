@@ -6,7 +6,7 @@ Game::Game()
 
 Game::~Game()
 {
-	for (auto timer : m_players_timer)
+	for (auto &timer : m_players_timer)
 		delete timer.second;
 
 }
@@ -50,7 +50,7 @@ unsigned int Game::submitAnswer(unsigned int answer, LoggedUser& answeringPlayer
 
 void Game::removePlayer(const std::string username)
 {
-	for (auto player : m_players)
+	for (auto &player : m_players)
 		if (player.first->getUsername() == username)
 			m_players.erase(player.first);
 }

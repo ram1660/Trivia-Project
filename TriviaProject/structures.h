@@ -25,7 +25,7 @@ struct RoomData
 
 struct GameData
 {
-	Question* currentQuestion;
+	Question* currentQuestion = nullptr;
 	unsigned int correctAnswerCount = 0;
 	unsigned int wrongAnswerCount = 0;
 	unsigned int averageAnswerTime = 0;
